@@ -67,60 +67,65 @@ export default function LoginScreen({ navigation }: any) {
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            {/* Header Text */}
-            <View style={styles.header}>
-              <Text style={[styles.headline, isDark && styles.textDark]}>
-                Schön dass du wieder{'\n'}hier bist
-              </Text>
+            {/* Top Section - Header + Inputs */}
+            <View style={styles.topSection}>
+              {/* Header Text */}
+              <View style={styles.header}>
+                <Text style={[styles.headline, isDark && styles.textDark]}>
+                  Schön dass du wieder{'\n'}hier bist
+                </Text>
+              </View>
+
+              {/* Form Section - Inputs */}
+              <View style={styles.formSection}>
+                
+                {/* Username Input */}
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      isDark && styles.inputDark
+                    ]}
+                    placeholder="Benutzername"
+                    placeholderTextColor={
+                      isDark ? theme.darkColors.neutral[600] : theme.colors.neutral[600]
+                    }
+                    value={username}
+                    onChangeText={setUsername}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    accessible={true}
+                    accessibilityLabel="Benutzername"
+                    accessibilityHint="Geben Sie Ihren Benutzernamen ein"
+                  />
+                </View>
+
+                {/* Password Input */}
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      isDark && styles.inputDark
+                    ]}
+                    placeholder="Passwort"
+                    placeholderTextColor={
+                      isDark ? theme.darkColors.neutral[600] : theme.colors.neutral[600]
+                    }
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    accessible={true}
+                    accessibilityLabel="Passwort"
+                    accessibilityHint="Geben Sie Ihr Passwort ein"
+                  />
+                </View>
+              </View>
             </View>
 
-            {/* Form Section */}
-            <View style={styles.formSection}>
-              
-              {/* Username Input */}
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[
-                    styles.input,
-                    isDark && styles.inputDark
-                  ]}
-                  placeholder="Benutzername"
-                  placeholderTextColor={
-                    isDark ? theme.darkColors.neutral[600] : theme.colors.neutral[600]
-                  }
-                  value={username}
-                  onChangeText={setUsername}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  accessible={true}
-                  accessibilityLabel="Benutzername"
-                  accessibilityHint="Geben Sie Ihren Benutzernamen ein"
-                />
-              </View>
-
-              {/* Password Input */}
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[
-                    styles.input,
-                    isDark && styles.inputDark
-                  ]}
-                  placeholder="Passwort"
-                  placeholderTextColor={
-                    isDark ? theme.darkColors.neutral[600] : theme.colors.neutral[600]
-                  }
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  accessible={true}
-                  accessibilityLabel="Passwort"
-                  accessibilityHint="Geben Sie Ihr Passwort ein"
-                />
-              </View>
-
-              {/* Login Button */}
+            {/* Bottom Section - Login Button at Thumb Height */}
+            <View style={styles.bottomSection}>
               <AnimatedButton
                 onPress={handleLogin}
                 accessibilityLabel="Login"
@@ -201,15 +206,19 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.xxxl,
     justifyContent: 'space-between',
     paddingBottom: theme.spacing.xl,
+  },
+  
+  // Top Section
+  topSection: {
+    paddingTop: theme.spacing.xxxl,
   },
   
   // Header
   header: {
     alignItems: 'center',
-    marginBottom: theme.spacing.xxl,
+    marginBottom: theme.spacing.xl,
   },
   headline: {
     ...theme.typography.largeTitle,
@@ -219,12 +228,9 @@ const styles = StyleSheet.create({
     lineHeight: 40,
   },
 
-  // Form Section
+  // Form Section (Inputs only)
   formSection: {
-    flex: 1,
-    justifyContent: 'center',
     gap: theme.spacing.md,
-    marginBottom: theme.spacing.xxxl,
   },
   inputContainer: {
     marginBottom: theme.spacing.sm,
@@ -246,6 +252,11 @@ const styles = StyleSheet.create({
     color: theme.darkColors.neutral[900],
   },
 
+  // Bottom Section - Button at Thumb Height
+  bottomSection: {
+    paddingBottom: Platform.OS === 'ios' ? theme.spacing.lg : theme.spacing.xl,
+  },
+
   // Button
   button: {
     height: 56,
@@ -254,7 +265,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     ...theme.shadows.sm,
-    marginTop: theme.spacing.lg,
   },
   buttonText: {
     ...theme.typography.body,

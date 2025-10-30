@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   useColorScheme,
   Animated,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
@@ -59,7 +60,10 @@ export default function RoleSelectionScreen({ navigation }: any) {
           </Text>
         </View>
 
-        {/* Role Cards */}
+        {/* Spacer - creates centered layout */}
+        <View style={styles.spacer} />
+
+        {/* Role Cards - centered in lower half */}
         <View style={styles.rolesContainer}>
           
           {/* Bewerber Card */}
@@ -82,6 +86,9 @@ export default function RoleSelectionScreen({ navigation }: any) {
             accessibilityHint="Doppeltippen um als Firma fortzufahren"
           />
         </View>
+
+        {/* Spacer - creates centered layout */}
+        <View style={styles.spacer} />
 
       </Animated.View>
     </SafeAreaView>
@@ -155,15 +162,12 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.xxxl,
-    justifyContent: 'space-between',
-    paddingBottom: theme.spacing.xxl,
+    paddingVertical: theme.spacing.xxxl,
   },
   
-  // Header
+  // Header (Top Section)
   header: {
     alignItems: 'center',
-    marginBottom: theme.spacing.xxxl,
   },
   headline: {
     ...theme.typography.largeTitle,
@@ -172,13 +176,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // Roles Container
-  rolesContainer: {
+  // Spacer - creates vertical centering
+  spacer: {
     flex: 1,
+  },
+
+  // Roles Container - centered in lower half
+  rolesContainer: {
     flexDirection: 'row',
     gap: theme.spacing.md,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   // Role Card

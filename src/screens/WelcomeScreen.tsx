@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
   
   // Top Section
   topSection: {
-    flex: 1,
     paddingTop: theme.spacing.xxxl,
     alignItems: 'center',
     justifyContent: 'center',

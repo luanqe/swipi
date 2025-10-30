@@ -240,6 +240,51 @@ export const layout = {
 };
 ```
 
+### Einheitliches Screen-Layout Pattern (IMMER verwenden!)
+```typescript
+// ✅ KONSISTENTES PATTERN für alle Screens mit Content oben + Buttons unten
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  
+  content: {
+    flex: 1,
+    paddingHorizontal: theme.spacing.lg, // 24px
+    justifyContent: 'space-between', // ← WICHTIG: Verteilt Top/Bottom Content
+  },
+  
+  // Top Section (Header, Logo, Inputs, etc.)
+  topSection: {
+    paddingTop: theme.spacing.xxxl, // 64px - Nach oben schieben
+    // KEIN flex: 1 - wächst nur so viel wie Content braucht
+  },
+  
+  // Bottom Section (CTA Buttons auf Daumenhöhe)
+  bottomSection: {
+    paddingBottom: Platform.OS === 'ios' 
+      ? theme.spacing.lg   // 24px iOS
+      : theme.spacing.xl,  // 32px Android (höherer Home Button)
+    gap: theme.spacing.md, // 16px zwischen Buttons
+    // KEIN flex: 1 - bleibt am Bottom durch space-between
+  },
+  
+  button: {
+    minHeight: 56, // Touch-Target (iOS: 44pt minimum, wir nutzen 56 für bessere Usability)
+    borderRadius: theme.borderRadius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+// ❌ NICHT VERWENDEN:
+// - Feste Höhen in Containern (height: 200) → nur in direkten Button/Card Komponenten
+// - flex: 1 in topSection → verhindert richtige Positionierung
+// - marginTop auf Buttons → spacing wird durch gap/paddingBottom kontrolliert
+// - justifyContent: 'center' wenn Buttons am Bottom sein sollen → immer 'space-between'
+```
+
 ### Border Radius
 ```typescript
 export const borderRadius = {
@@ -608,6 +653,13 @@ const styles = StyleSheet.create({
 
 ## 🎨 Software Architecture
 - SOLID Principles
+- IMMER best practice
+- sauberen, effizienten Code schreiben!
+- klare Trennung von Logik und UI
+- standartisierte Nomenklatur bei Variablen/Methoden usw. (z.B. camelCase für Variablen, PascalCase für Komponenten) und nicht einmal Deutsch einmal Englisch oder so.
+- IMMER einheitliche Patterns, keine Inkonstistenzen. Zum Beispiel: Button auf Daumenhöhe: einmal dynamisch, einmal feste Höhe -> nein beide dynamisch!
+- DRY (Don't Repeat Yourself)
+
 ----
 
 **Letzte Aktualisierung**: 29. Oktober 2025  
