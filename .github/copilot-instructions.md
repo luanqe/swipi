@@ -652,7 +652,7 @@ const styles = StyleSheet.create({
 
 
 ## 🎨 Software Architektur & Prinzipien
-- SOLID Principles
+- SOLID Principles: [Link](https://de.wikipedia.org/wiki/SOLID)
 - IMMER best practice
 - Habe immer das große Ganze im Blick
 - sauberen, effizienten Code schreiben!
@@ -676,6 +676,14 @@ const styles = StyleSheet.create({
 - Bitte mach eine saubere logische übersichtliche Ordnerstruktur, keine unübersichtlichen Strukturen wo alles durcheinander ist. Halte dich an bewährte Strukturen für React Native/Expo Projekte. Ich lege Wert auf Ordnung und Struktur. Ich hasse Chaos!
 - Gib Variablen, Funktionen, Komponenten immer klare, verständliche Namen. Keine Abkürzungen oder unverständlichen Begriffe.
 - Ich bin dein Chef. Was ich sage, ist Gesetz. Befolge meine Anweisungen genau so, wie ich sie gebe. Wenn du etwas nicht verstehst, frage nach, anstatt es zu erraten oder zu improvisieren.
+- Konsistenz in der UI und im Code ist das A und O. Halte dich immer an die definierten Patterns, Styles, Prinzipien. Keine Ausnahmen.
+- Responsives Design: Stelle sicher, dass die App auf verschiedenen Bildschirmgrößen und -auflösungen gut aussieht und funktioniert.
+- Anstatt zu denken "Ich erstelle eine isolierte Komponente" denke dir immer: Wie fügt sich das in UNSER Gesamtsystem ein? Wie interagiert es mit anderen Komponenten? Wie kann es wiederverwendet werden? Wie benutze ich bereits existierende Komponenten/Styles/Patterns? Root solution! Keine Symptom-Behandlung! Keine Improvisation!
+-Frag dich immer:
+  - Gibt es bereits Components dafür?
+  - Welche Theme-Werte brauche ich?
+  - Folge ich bestehende Patterns?
+  - Ist es erweiterbar?
 
 ----
 

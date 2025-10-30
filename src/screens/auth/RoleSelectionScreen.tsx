@@ -1,17 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-  Animated,
-  Platform,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, StyleSheet, Animated, useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { theme } from '@/theme';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Text, RoleCard } from '@/components/ui';
+import { colors, darkColors, spacing } from '@/theme';
 import { useRole } from '@/context/RoleContext';
 
 /**
@@ -45,17 +38,17 @@ export default function RoleSelectionScreen({ navigation }: any) {
     navigation.navigate('Register');
   };
 
+  const gradientColors = isDark 
+    ? [darkColors.background.primary, darkColors.background.secondary] as const
+    : [colors.background.secondary, colors.background.primary] as const;
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       
       {/* Background Gradient */}
       <LinearGradient
-        colors={
-          isDark 
-            ? ['#18191A', '#242526'] 
-            : ['#F7F8FA', '#FFFFFF']
-        }
+        colors={gradientColors}
         style={StyleSheet.absoluteFillObject}
       />
 
@@ -63,7 +56,7 @@ export default function RoleSelectionScreen({ navigation }: any) {
         
         {/* Header */}
         <View style={styles.header}>
-          <Text style={[styles.headline, isDark && styles.textDark]}>
+          <Text variant="largeTitle" color="primary" textAlign="center">
             Welche Rolle hast du?
           </Text>
         </View>
@@ -79,7 +72,6 @@ export default function RoleSelectionScreen({ navigation }: any) {
             title="Bewerber"
             icon="👤"
             onPress={() => handleRoleSelect('BEWERBER')}
-            isDark={isDark}
             accessibilityLabel="Bewerber Rolle auswählen"
             accessibilityHint="Doppeltippen um als Bewerber fortzufahren"
           />
@@ -89,7 +81,6 @@ export default function RoleSelectionScreen({ navigation }: any) {
             title="Firma"
             icon="🏢"
             onPress={() => handleRoleSelect('FIRMA')}
-            isDark={isDark}
             accessibilityLabel="Firma Rolle auswählen"
             accessibilityHint="Doppeltippen um als Firma fortzufahren"
           />
@@ -103,85 +94,19 @@ export default function RoleSelectionScreen({ navigation }: any) {
   );
 }
 
-/**
- * Role Card Component
- */
-function RoleCard({ 
-  title,
-  icon,
-  onPress,
-  isDark,
-  ...props 
-}: {
-  title: string;
-  icon: string;
-  onPress: () => void;
-  isDark: boolean;
-  accessibilityLabel?: string;
-  accessibilityHint?: string;
-}) {
-  const scale = React.useRef(new Animated.Value(1)).current;
-
-  const handlePressIn = () => {
-    Animated.spring(scale, {
-      toValue: 0.95,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    Animated.spring(scale, {
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      accessible={true}
-      accessibilityRole="button"
-      activeOpacity={0.9}
-      style={styles.roleCardTouchable}
-      {...props}
-    >
-      <Animated.View 
-        style={[
-          styles.roleCard,
-          isDark && styles.roleCardDark,
-          { transform: [{ scale }] },
-        ]}
-      >
-        <Text style={styles.roleIcon}>{icon}</Text>
-        <Text style={[styles.roleTitle, isDark && styles.textDark]}>
-          {title}
-        </Text>
-      </Animated.View>
-    </TouchableOpacity>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   content: {
     flex: 1,
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.xxxl,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xxxl,
   },
   
   // Header (Top Section)
   header: {
     alignItems: 'center',
-  },
-  headline: {
-    ...theme.typography.largeTitle,
-    color: theme.colors.neutral[900],
-    fontWeight: '600',
-    textAlign: 'center',
   },
 
   // Spacer - creates vertical centering
@@ -192,40 +117,6 @@ const styles = StyleSheet.create({
   // Roles Container - centered in lower half
   rolesContainer: {
     flexDirection: 'row',
-    gap: theme.spacing.md,
-  },
-
-  // Role Card
-  roleCardTouchable: {
-    flex: 1,
-    height: 200,
-  },
-  roleCard: {
-    flex: 1,
-    backgroundColor: theme.colors.background.primary,
-    borderRadius: theme.borderRadius.xl,
-    borderWidth: 2,
-    borderColor: theme.colors.neutral[300],
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: theme.spacing.md,
-    ...theme.shadows.md,
-  },
-  roleCardDark: {
-    backgroundColor: theme.darkColors.background.secondary,
-    borderColor: theme.darkColors.neutral[400],
-  },
-  roleIcon: {
-    fontSize: 64,
-  },
-  roleTitle: {
-    ...theme.typography.title2,
-    color: theme.colors.neutral[900],
-    fontWeight: '600',
-  },
-
-  // Dark Mode
-  textDark: {
-    color: theme.darkColors.neutral[900],
+    gap: spacing.md,
   },
 });
