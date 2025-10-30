@@ -1,30 +1,23 @@
 import React, { useRef } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   useColorScheme,
   Animated,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { theme } from '@/theme';
+import { Text, Button, Input } from '@/components/ui';
+import { colors, darkColors, spacing, layout } from '@/theme';
 import { useRole } from '@/context/RoleContext';
-import DynamicForm from '@/components/forms/DynamicForm';
-import type { OnboardingField } from '@/config/onboarding';
 
 /**
  * Register Screen
- * 
- * Email + Password Registration
+ * 3-Section Layout: Header → Form Inputs → Button
  * Role wurde VORHER in RoleSelectionScreen gewählt
- * 
- * MVP: Mock-Registration (keine Validierung)
- * PRODUCTION: Backend-Integration mit Validation
  */
 
 export default function RegisterScreen({ navigation }: any) {
@@ -32,6 +25,13 @@ export default function RegisterScreen({ navigation }: any) {
   const isDark = colorScheme === 'dark';
   
   const { role, register } = useRole();
+  
+  const [username, setUsername] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [passwordRepeat, setPasswordRepeat] = React.useState('');
+  const [companyName, setCompanyName] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
   
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -43,65 +43,44 @@ export default function RegisterScreen({ navigation }: any) {
     }).start();
   }, []);
 
-  /**
-   * Handle Registration
-   * MVP: Mock (accepts all)
-   * SPÄTER: await authService.register({ email, password, role });
-   */
-  const handleRegister = async (formData: Record<string, any>) => {
-    const { email, password } = formData;
-    
-    console.log('[RegisterScreen] Registering:', { email, role });
-    
-    // Call Context register (mock)
-    await register(email, password);
-    
-    // Navigate to Onboarding
-    navigation.navigate('OnboardingData');
+  const handleRegister = async () => {
+    try {
+      setLoading(true);
+      console.log('[RegisterScreen] Registering:', { email, role });
+      
+      await register(email, password);
+      navigation.navigate('OnboardingData');
+    } catch (error) {
+      console.error('Registration failed:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Form Fields Configuration
-  const registerFields: OnboardingField[] = [
-    {
-      name: 'email',
-      label: 'Email',
-      type: 'email',
-      placeholder: 'deine@email.de',
-      required: true,
-    },
-    {
-      name: 'password',
-      label: 'Passwort',
-      type: 'password',
-      placeholder: 'Mindestens 8 Zeichen',
-      required: true,
-    },
-    {
-      name: 'passwordRepeat',
-      label: 'Passwort wiederholen',
-      type: 'password',
-      placeholder: 'Passwort erneut eingeben',
-      required: true,
-    },
-  ];
+  const gradientColors = isDark 
+    ? [darkColors.background.primary, darkColors.background.secondary] as const
+    : [colors.background.secondary, colors.background.primary] as const;
+
+  const isFormValid = 
+    username.trim() !== '' && 
+    email.trim() !== '' && 
+    password.trim() !== '' &&
+    passwordRepeat.trim() !== '' &&
+    password === passwordRepeat &&
+    (role === 'BEWERBER' || companyName.trim() !== '');
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       
-      {/* Background Gradient */}
       <LinearGradient
-        colors={
-          isDark 
-            ? ['#18191A', '#242526'] 
-            : ['#F7F8FA', '#FFFFFF']
-        }
+        colors={gradientColors}
         style={StyleSheet.absoluteFillObject}
       />
 
       <KeyboardAvoidingView
         style={styles.keyboardView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        {...layout.keyboardAware.withKeyboard}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -110,39 +89,84 @@ export default function RegisterScreen({ navigation }: any) {
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            {/* Top Section - Header */}
+            {/* SECTION 1: Header */}
             <View style={styles.topSection}>
-              {/* Back Button Placeholder (optional) */}
-              
-              {/* Header */}
-              <View style={styles.header}>
-                <Text style={[styles.headline, isDark && styles.textDark]}>
-                  Melde dich an
-                </Text>
-                <Text style={[styles.subtitle, isDark && styles.subtitleDark]}>
-                  Als {role === 'BEWERBER' ? 'Bewerber' : 'Firma'}
-                </Text>
-              </View>
-
-              {/* Form */}
-              <DynamicForm
-                fields={registerFields}
-                onSubmit={handleRegister}
-                submitButtonText="Konto erstellen"
-              />
+              <Text
+                variant="largeTitle"
+                color="primary"
+                textAlign="center"
+                style={layout.headerZone}
+              >
+                Konto erstellen
+              </Text>
+              <Text
+                variant="body"
+                color="secondary"
+                textAlign="center"
+                style={styles.subtitle}
+              >
+                {role === 'BEWERBER' ? 'Als Bewerber' : 'Als Firma'}
+              </Text>
             </View>
 
-            {/* Bottom Section - Login Link */}
-            <View style={styles.bottomSection}>
-              <Text style={[styles.loginText, isDark && styles.textDark]}>
-                Hast du schon ein Konto?{' '}
-                <Text 
-                  style={styles.loginLink}
-                  onPress={() => navigation.navigate('Login')}
-                >
-                  Anmelden
-                </Text>
-              </Text>
+            {/* SECTION 2: Form Inputs (bewegen sich NICHT) */}
+            <View style={styles.middleSection}>
+              <Input
+                placeholder="Benutzername"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              
+              <Input
+                placeholder="E-Mail"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              
+              <Input
+                placeholder="Passwort (mind. 8 Zeichen)"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+              />
+
+              <Input
+                placeholder="Passwort wiederholen"
+                value={passwordRepeat}
+                onChangeText={setPasswordRepeat}
+                secureTextEntry
+                autoCapitalize="none"
+                error={passwordRepeat && password !== passwordRepeat ? 'Passwörter stimmen nicht überein' : undefined}
+              />
+
+              {role === 'FIRMA' && (
+                <Input
+                  placeholder="Firmenname"
+                  value={companyName}
+                  onChangeText={setCompanyName}
+                  autoCorrect={false}
+                />
+              )}
+            </View>
+
+            {/* SECTION 3: Button (bewegt sich MIT Tastatur) */}
+            <View style={[styles.bottomSection, layout.thumbZone]}>
+              <Button
+                variant="primary"
+                size="lg"
+                onPress={handleRegister}
+                disabled={!isFormValid || loading}
+                accessibilityLabel="Konto erstellen"
+                accessibilityHint="Doppeltippen um ein Konto zu erstellen"
+              >
+                {loading ? 'Wird erstellt...' : 'Konto erstellen'}
+              </Button>
             </View>
 
           </Animated.View>
@@ -151,10 +175,6 @@ export default function RegisterScreen({ navigation }: any) {
     </SafeAreaView>
   );
 }
-
-// ============================================================================
-// STYLES
-// ============================================================================
 
 const styles = StyleSheet.create({
   container: {
@@ -167,49 +187,19 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   content: {
-    flex: 1,
-    paddingHorizontal: theme.spacing.lg,
-    justifyContent: 'space-between',
+    ...layout.sections.threeSection,
+    paddingHorizontal: layout.screenPadding.horizontal,
   },
-  
-  // Top Section (Header + Form)
   topSection: {
-    paddingTop: theme.spacing.xxxl,
-  },
-  header: {
-    marginBottom: theme.spacing.xxl,
-  },
-  headline: {
-    ...theme.typography.largeTitle,
-    color: theme.colors.neutral[900],
-    fontWeight: '700',
-    marginBottom: theme.spacing.xs,
+    // Header oben
   },
   subtitle: {
-    ...theme.typography.body,
-    color: theme.colors.neutral[700],
+    marginTop: spacing.sm,
   },
-  subtitleDark: {
-    color: theme.darkColors.neutral[700],
+  middleSection: {
+    ...layout.formZone, // ← Inputs bleiben in der Mitte (bewegen sich NICHT)
   },
-
-  // Bottom Section (Login Link)
   bottomSection: {
-    paddingBottom: Platform.OS === 'ios' ? theme.spacing.lg : theme.spacing.xl,
-    alignItems: 'center',
-  },
-  loginText: {
-    ...theme.typography.body,
-    color: theme.colors.neutral[700],
-    textAlign: 'center',
-  },
-  loginLink: {
-    color: theme.colors.primary[500],
-    fontWeight: '600',
-  },
-
-  // Dark Mode
-  textDark: {
-    color: theme.darkColors.neutral[900],
+    // Button auf Daumenhöhe (bewegt sich MIT Tastatur)
   },
 });

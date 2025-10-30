@@ -1,22 +1,21 @@
 import React, { useRef, useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   useColorScheme,
   Animated,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { theme } from '@/theme';
-import { useRole } from '@/context/RoleContext';
+import { Text } from '@/components/ui';
 import DynamicForm from '@/components/forms/DynamicForm';
 import { getOnboardingSteps, getTotalSteps } from '@/config/onboarding';
+import { colors, darkColors, spacing, layout } from '@/theme';
+import { useRole } from '@/context/RoleContext';
 
 /**
  * Onboarding Data Screen
@@ -117,7 +116,7 @@ export default function OnboardingDataScreen({ navigation }: any) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>
+          <Text variant="body" color="error" textAlign="center">
             Keine Onboarding-Steps für Rolle: {role}
           </Text>
         </View>
@@ -125,23 +124,22 @@ export default function OnboardingDataScreen({ navigation }: any) {
     );
   }
 
+  const gradientColors = isDark 
+    ? [darkColors.background.primary, darkColors.background.secondary] as const
+    : [colors.background.secondary, colors.background.primary] as const;
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       
-      {/* Background Gradient */}
       <LinearGradient
-        colors={
-          isDark 
-            ? ['#18191A', '#242526'] 
-            : ['#F7F8FA', '#FFFFFF']
-        }
+        colors={gradientColors}
         style={StyleSheet.absoluteFillObject}
       />
 
       <KeyboardAvoidingView
         style={styles.keyboardView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        {...layout.keyboardAware.withKeyboard}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -150,7 +148,6 @@ export default function OnboardingDataScreen({ navigation }: any) {
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            {/* Top Section - Header + Form */}
             <View style={styles.topSection}>
               {/* Back Button */}
               {currentStepIndex > 0 && (
@@ -161,7 +158,7 @@ export default function OnboardingDataScreen({ navigation }: any) {
                   accessibilityRole="button"
                   accessibilityLabel="Zurück"
                 >
-                  <Text style={[styles.backButtonText, isDark && styles.textDark]}>
+                  <Text variant="body" color="primary">
                     ← Zurück
                   </Text>
                 </TouchableOpacity>
@@ -176,30 +173,32 @@ export default function OnboardingDataScreen({ navigation }: any) {
                       style={[
                         styles.progressDot,
                         index <= currentStepIndex && styles.progressDotActive,
-                        isDark && styles.progressDotDark,
-                        index <= currentStepIndex && isDark && styles.progressDotActiveDark,
                       ]}
                     />
                   ))}
                 </View>
-                <Text style={[styles.progressText, isDark && styles.textSecondaryDark]}>
+                <Text variant="caption1" color="secondary" textAlign="center">
                   Schritt {currentStepIndex + 1} von {totalSteps}
                 </Text>
               </View>
 
               {/* Header */}
-              <View style={styles.header}>
-                <Text style={[styles.headline, isDark && styles.textDark]}>
-                  {currentStep.title}
+              <Text
+                variant="largeTitle"
+                color="primary"
+                style={styles.headline}
+              >
+                {currentStep.title}
+              </Text>
+              {currentStep.subtitle && (
+                <Text variant="body" color="secondary" style={styles.subtitle}>
+                  {currentStep.subtitle}
                 </Text>
-                {currentStep.subtitle && (
-                  <Text style={[styles.subtitle, isDark && styles.subtitleDark]}>
-                    {currentStep.subtitle}
-                  </Text>
-                )}
-              </View>
+              )}
+            </View>
 
-              {/* Dynamic Form for current step */}
+            {/* SECTION 2: Form Fields (Middle - bewegen sich NICHT) */}
+            <View style={styles.middleSection}>
               <DynamicForm
                 fields={currentStep.fields}
                 onSubmit={handleStepSubmit}
@@ -208,16 +207,15 @@ export default function OnboardingDataScreen({ navigation }: any) {
               />
             </View>
 
+            {/* SECTION 3: Submit Button wird von DynamicForm gerendert */}
+            {/* Button automatisch auf Daumenhöhe durch Layout */}
+
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-// ============================================================================
-// STYLES
-// ============================================================================
 
 const styles = StyleSheet.create({
   container: {
@@ -230,93 +228,49 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   content: {
-    flex: 1,
-    paddingHorizontal: theme.spacing.lg,
-    paddingBottom: Platform.OS === 'ios' ? theme.spacing.lg : theme.spacing.xl,
+    ...layout.sections.threeSection, // ← 3-Section Pattern (Header + Form + Button)
+    paddingHorizontal: layout.screenPadding.horizontal,
   },
-  
-  // Top Section (Header + Form)
   topSection: {
-    paddingTop: theme.spacing.lg,
+    // Wächst nur so viel wie Content braucht
   },
-
-  // Back Button
   backButton: {
-    marginBottom: theme.spacing.md,
+    marginBottom: spacing.md,
     alignSelf: 'flex-start',
   },
-  backButtonText: {
-    ...theme.typography.body,
-    color: theme.colors.primary[500],
-    fontWeight: '600',
-  },
-
-  // Progress Indicator
   progressContainer: {
-    marginBottom: theme.spacing.xxl,
+    marginBottom: spacing.xxl,
   },
   progressBar: {
     flexDirection: 'row',
-    gap: theme.spacing.sm,
-    marginBottom: theme.spacing.sm,
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
   },
   progressDot: {
     flex: 1,
     height: 4,
-    backgroundColor: theme.colors.neutral[300],
+    backgroundColor: colors.neutral[300],
     borderRadius: 2,
   },
   progressDotActive: {
-    backgroundColor: theme.colors.primary[500],
-  },
-  progressDotDark: {
-    backgroundColor: theme.darkColors.neutral[400],
-  },
-  progressDotActiveDark: {
-    backgroundColor: theme.colors.primary[500],
-  },
-  progressText: {
-    ...theme.typography.caption1,
-    color: theme.colors.neutral[700],
-    textAlign: 'center',
-  },
-  
-  // Header
-  header: {
-    marginBottom: theme.spacing.xl,
+    backgroundColor: colors.primary[500],
   },
   headline: {
-    ...theme.typography.largeTitle,
-    color: theme.colors.neutral[900],
-    fontWeight: '700',
-    marginBottom: theme.spacing.xs,
+    marginBottom: spacing.xs,
   },
   subtitle: {
-    ...theme.typography.body,
-    color: theme.colors.neutral[700],
+    marginTop: spacing.sm,
   },
-  subtitleDark: {
-    color: theme.darkColors.neutral[700],
+  middleSection: {
+    ...layout.formZone, // ← Form bleibt in der Mitte
   },
-
-  // Error State
+  bottomSection: {
+    gap: spacing.md,
+  },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing.xl,
-  },
-  errorText: {
-    ...theme.typography.body,
-    color: theme.colors.error,
-    textAlign: 'center',
-  },
-
-  // Dark Mode
-  textDark: {
-    color: theme.darkColors.neutral[900],
-  },
-  textSecondaryDark: {
-    color: theme.darkColors.neutral[700],
+    padding: spacing.xl,
   },
 });

@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   useColorScheme,
-  Platform,
   Animated,
   KeyboardAvoidingView,
   ScrollView,
@@ -11,15 +10,16 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Text, Input } from '@/components/ui';
-import { colors, darkColors, spacing, bottomPadding } from '@/theme';
+import { Text, Button, Input } from '@/components/ui';
+import { colors, darkColors, spacing, layout } from '@/theme';
 import { useRole } from '@/context/RoleContext';
 
 /**
  * Login Screen Component
- * "Schön dass du wieder hier bist"
- * Username/Password Login
+ * "Willkommen zurück"
+ * 3-Section Layout: Header → Form Inputs → Button
  */
+
 export default function LoginScreen({ navigation }: any) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
@@ -28,6 +28,7 @@ export default function LoginScreen({ navigation }: any) {
   
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
   
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -40,83 +41,85 @@ export default function LoginScreen({ navigation }: any) {
   }, []);
 
   const handleLogin = async () => {
-    console.log('[LoginScreen] Login pressed:', { username });
-    // Call Context login (mock)
-    // RoleNavigator will automatically navigate to correct stack
-    await login(username, password);
+    try {
+      setLoading(true);
+      await login(username, password);
+    } catch (error) {
+      console.error('Login failed:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const gradientColors = isDark 
     ? [darkColors.background.primary, darkColors.background.secondary] as const
     : [colors.background.secondary, colors.background.primary] as const;
 
+  const isFormValid = username.trim() !== '' && password.trim() !== '';
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       
-      {/* Background Gradient */}
       <LinearGradient
         colors={gradientColors}
         style={StyleSheet.absoluteFillObject}
       />
 
+      {/* ✅ KeyboardAvoidingView - Nur Button bewegt sich */}
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
+        {...layout.keyboardAware.withKeyboard}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            {/* Top Section - Header + Inputs */}
+            {/* ✅ SECTION 1: Header (Top) */}
             <View style={styles.topSection}>
-              {/* Header Text */}
-              <View style={styles.header}>
-                <Text variant="largeTitle" color="primary" textAlign="center" style={styles.headline}>
-                  Schön dass du wieder{'\n'}hier bist
-                </Text>
-              </View>
-
-              {/* Form Section - Inputs */}
-              <View style={styles.formSection}>
-                
-                {/* Username Input */}
-                <Input
-                  placeholder="Benutzername"
-                  value={username}
-                  onChangeText={setUsername}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  accessibilityLabel="Benutzername"
-                  accessibilityHint="Geben Sie Ihren Benutzernamen ein"
-                />
-
-                {/* Password Input */}
-                <Input
-                  placeholder="Passwort"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  accessibilityLabel="Passwort"
-                  accessibilityHint="Geben Sie Ihr Passwort ein"
-                />
-              </View>
+              <Text 
+                variant="largeTitle" 
+                color="primary" 
+                textAlign="center"
+                style={layout.headerZone}
+              >
+                Willkommen zurück
+              </Text>
             </View>
 
-            {/* Bottom Section - Login Button at Thumb Height */}
-            <View style={styles.bottomSection}>
+            {/* ✅ SECTION 2: Form Inputs (Middle - bewegen sich NICHT) */}
+            <View style={styles.middleSection}>
+              <Input
+                placeholder="Benutzername"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              
+              <Input
+                placeholder="Passwort"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+              />
+            </View>
+
+            {/* ✅ SECTION 3: Button (Bottom - bewegt sich MIT Tastatur) */}
+            <View style={[styles.bottomSection, layout.thumbZone]}>
               <Button
                 variant="primary"
                 size="lg"
                 onPress={handleLogin}
+                disabled={!isFormValid || loading}
                 accessibilityLabel="Login"
                 accessibilityHint="Doppeltippen um sich anzumelden"
               >
-                Login
+                {loading ? 'Wird geladen...' : 'Login'}
               </Button>
             </View>
 
@@ -138,32 +141,17 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   content: {
-    flex: 1,
-    paddingHorizontal: spacing.lg,
-    justifyContent: 'space-between',
+    ...layout.sections.threeSection, // ← 3-Section Pattern
+    paddingHorizontal: layout.screenPadding.horizontal,
   },
-  
-  // Top Section
   topSection: {
-    paddingTop: spacing.xxxl,
+    // Header bleibt oben, wächst nur für Content
   },
-  
-  // Header
-  header: {
-    alignItems: 'center',
-    marginBottom: spacing.xl,
+  middleSection: {
+    ...layout.formZone, // ← Form-Inputs in der Mitte (bewegen sich NICHT)
   },
-  headline: {
-    lineHeight: 40,
-  },
-
-  // Form Section (Inputs only)
-  formSection: {
-    gap: spacing.md,
-  },
-
-  // Bottom Section - Button at Thumb Height
   bottomSection: {
-    paddingBottom: bottomPadding,
+    // Button auf Daumenhöhe (bewegt sich MIT Tastatur)
+    // paddingBottom kommt von layout.thumbZone
   },
 });

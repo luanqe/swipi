@@ -7,10 +7,11 @@
 
 export { colors, darkColors } from './colors';
 export { typography } from './typography';
-export { spacing, bottomPadding } from './spacing';
+export { spacing } from './spacing';
 export { borderRadius } from './borderRadius';
 export { shadows } from './shadows';
 export { animations } from './animations';
+export { layout, bottomPadding } from './layout';
 
 import { colors, darkColors } from './colors';
 import { typography } from './typography';
