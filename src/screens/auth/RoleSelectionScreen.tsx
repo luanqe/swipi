@@ -35,11 +35,11 @@ export default function RoleSelectionScreen({ navigation }: any) {
     }).start();
   }, []);
 
-  const handleRoleSelect = (role: 'BEWERBER' | 'FIRMA') => {
+  const handleRoleSelect = async (role: 'BEWERBER' | 'FIRMA') => {
     console.log('[RoleSelectionScreen] Selected role:', role);
     
     // Set role in Context
-    setRole(role);
+    await setRole(role);
     
     // Navigate to Register
     navigation.navigate('Register');

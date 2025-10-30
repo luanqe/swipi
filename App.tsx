@@ -1,61 +1,95 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Screens
+// Context
+import { RoleProvider } from './src/context/RoleContext';
+
+// Navigation
+import RoleNavigator from './src/navigation/RoleNavigator';
+
+// Components
 import SplashScreenComponent from './src/screens/SplashScreen';
-import WelcomeScreen from './src/screens/WelcomeScreen';
-import LoginScreen from './src/screens/LoginScreen';
-import RoleSelectionScreen from './src/screens/RoleSelectionScreen';
+import LoadingIndicator from './src/components/common/LoadingIndicator';
 
 // Prevent auto-hide of splash screen
 SplashScreen.preventAutoHideAsync();
 
-const Stack = createStackNavigator();
-
 export default function App() {
-  const [showSplash, setShowSplash] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [showSplash, setShowSplash] = React.useState(false);
 
+  /**
+   * Check Auth Status on App Start
+   * 
+   * Flow:
+   * 1. Check AsyncStorage for existing auth token
+   * 2. If token exists (returning user) → Skip Splash, go to RoleNavigator
+   * 3. If NO token (new user) → Show Splash → Welcome flow
+   * 
+   * UX Requirement: "Splash nur für neue User, nicht bei jedem App-Start (nervt!)"
+   */
   React.useEffect(() => {
-    // Hide native splash and show custom splash
-    SplashScreen.hideAsync();
+    const checkAuthStatus = async () => {
+      try {
+        // Hide native splash
+        await SplashScreen.hideAsync();
+        
+        // Check if user is logged in
+        const authToken = await AsyncStorage.getItem('authToken');
+        
+        if (authToken) {
+          // Returning user → Skip splash, go directly to app
+          console.log('[App] Auth token found, skipping splash');
+          setShowSplash(false);
+        } else {
+          // New user → Show splash for branding
+          console.log('[App] No auth token, showing splash');
+          setShowSplash(true);
+        }
+        
+        setIsLoading(false);
+      } catch (error) {
+        console.error('[App] Failed to check auth status:', error);
+        // On error, show splash (safe default for first-time users)
+        setShowSplash(true);
+        setIsLoading(false);
+      }
+    };
 
-    // Transition to welcome screen after 2.5s
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 2500);
-
-    return () => clearTimeout(timer);
+    checkAuthStatus();
   }, []);
 
-  if (showSplash) {
-    return <SplashScreenComponent />;
+  /**
+   * Handle Splash Finish
+   * Called after 2.5s animation completes
+   */
+  const handleSplashFinish = () => {
+    setShowSplash(false);
+  };
+
+  // Show loading indicator while checking AsyncStorage
+  if (isLoading) {
+    return <LoadingIndicator />;
   }
 
+  // Show custom splash for new users
+  if (showSplash) {
+    return <SplashScreenComponent onFinish={handleSplashFinish} />;
+  }
+
+  // Main app for returning users (or after splash)
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-              cardStyle: { backgroundColor: 'transparent' },
-              cardStyleInterpolator: ({ current: { progress } }) => ({
-                cardStyle: {
-                  opacity: progress,
-                },
-              }),
-            }}
-          >
-            <Stack.Screen name="Welcome" component={WelcomeScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="RoleSelection" component={RoleSelectionScreen} />
-            {/* TODO: Add Home screens for Bewerber/Firma */}
-          </Stack.Navigator>
-        </NavigationContainer>
+        <RoleProvider>
+          <NavigationContainer>
+            <RoleNavigator />
+          </NavigationContainer>
+        </RoleProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

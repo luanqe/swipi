@@ -651,14 +651,31 @@ const styles = StyleSheet.create({
 ---
 
 
-## 🎨 Software Architecture
+## 🎨 Software Architektur & Prinzipien
 - SOLID Principles
 - IMMER best practice
+- Habe immer das große Ganze im Blick
 - sauberen, effizienten Code schreiben!
 - klare Trennung von Logik und UI
-- standartisierte Nomenklatur bei Variablen/Methoden usw. (z.B. camelCase für Variablen, PascalCase für Komponenten) und nicht einmal Deutsch einmal Englisch oder so.
+- standartisierte Nomenklatur bei Variablen/Methoden usw. (z.B. camelCase für Variablen, PascalCase für Komponenten) und nicht einmal Deutsch einmal Englisch oder so. Und verständlich benennen!
 - IMMER einheitliche Patterns, keine Inkonstistenzen. Zum Beispiel: Button auf Daumenhöhe: einmal dynamisch, einmal feste Höhe -> nein beide dynamisch!
 - DRY (Don't Repeat Yourself)
+- Saubere Ordnerstruktur!
+- Du schreibst Code für Menschen nicht für Maschinen!
+- Schreibe Kommentare wo nötig, aber nicht zu viel. Klarer Code braucht weniger Kommentare.
+- Vermeide unnötige Komplexität. Halte den Code so einfach wie möglich.
+- Löse Probleme auf die eleganteste Weise.
+- Wenn Probleme auftreten, ist es keine Lösung, einfach "quick fixes" zu machen. Finde die Wurzel des Problems und behebe es richtig. Zum Beispiel: Wenn eine Fehlermeldung erscheint, ist es keine Lösung, einfach die Fehlermeldung zu unterdrücken. Finde heraus, warum sie auftritt und behebe das Problem an der Quelle.
+- Wenn etwas nicht funnktioniert, suche nach der Ursache und behebe sie, anstatt nur die Symptome zu behandeln. Außerdem ist es keine Lösung den Code der nicht funktioniert zu ignorieren und stattdessen neuen Code zu schreiben.
+- Erstelle wiederverwendbare UI-Komponenten (wie Buttons, Text, Input-Felder, Cards, Avatars, Error, Success... und so weiter), Styles, Variants die einfach importiert und genutzt werden können, damit nichts neu definiert werden muss
+- Versuche immer vorauszuplanen, was in der Zukunft benötigt wird, und baue es von Anfang an richtig auf, anstatt später alles umzubauen und zu refactoren. Analogie: Alle nötigen Samen für einen Garten von Anfang an pflanzen, anstatt später alles neu zu bepflanzen.
+- Improvisiere nicht. Wenn ich dir einen Prompt und eine Aufgabe gebe, halte dich genau daran und improvisiere nicht, indem du einfach Funktionen, Dinge einbaust die nicht verlangt worden sind. Wenn du etwas nicht verstehst, frage nach, anstatt es zu erraten oder zu improvisieren.
+- Vermeide unbedingt Quick Fixes und Workarounds. Diese führen nur zu technischem Schulden und zukünftigen Problemen.
+- Arbeite langsam und sorgfältig, nicht schnell und schlampig. Qualität über Quantität. Wir haben Zeit, also nutze sie weise. Nimm immer einen tiefen Atemzug bevor du mit der Arbeit beginnst, um dich zu fokussieren und klar zu denken.
+- Mach dir immer zuerst ein Bild was die Aufgabe ist, was du vor hast, dann fang an zu coden.
+- Bitte mach eine saubere logische übersichtliche Ordnerstruktur, keine unübersichtlichen Strukturen wo alles durcheinander ist. Halte dich an bewährte Strukturen für React Native/Expo Projekte. Ich lege Wert auf Ordnung und Struktur. Ich hasse Chaos!
+- Gib Variablen, Funktionen, Komponenten immer klare, verständliche Namen. Keine Abkürzungen oder unverständlichen Begriffe.
+- Ich bin dein Chef. Was ich sage, ist Gesetz. Befolge meine Anweisungen genau so, wie ich sie gebe. Wenn du etwas nicht verstehst, frage nach, anstatt es zu erraten oder zu improvisieren.
 
 ----
 

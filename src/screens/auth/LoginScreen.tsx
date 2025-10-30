@@ -41,11 +41,11 @@ export default function LoginScreen({ navigation }: any) {
     }).start();
   }, []);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     console.log('[LoginScreen] Login pressed:', { username });
     // Call Context login (mock)
     // RoleNavigator will automatically navigate to correct stack
-    login(username, password);
+    await login(username, password);
   };
 
   return (

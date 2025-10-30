@@ -16,9 +16,19 @@ const { width, height } = Dimensions.get('window');
 /**
  * Splash Screen Component
  * Displays the Swipi logo with animated entrance
- * Auto-transitions to Welcome screen after 2.5s
+ * 
+ * Props:
+ * - onFinish: Callback nach Animation (2.5s)
+ * 
+ * Usage:
+ * <SplashScreen onFinish={() => setShowSplash(false)} />
  */
-export default function SplashScreen() {
+
+interface SplashScreenProps {
+  onFinish?: () => void;
+}
+
+export default function SplashScreen({ onFinish }: SplashScreenProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   
@@ -39,7 +49,14 @@ export default function SplashScreen() {
         useNativeDriver: true,
       }),
     ]).start();
-  }, []);
+
+    // Call onFinish after animation (2.5s total)
+    const timer = setTimeout(() => {
+      onFinish?.();
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [onFinish]);
 
   return (
     <View style={styles.container}>
