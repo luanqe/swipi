@@ -10,16 +10,15 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, Button, Input } from '@/components/ui';
+import { Text, Input, Button } from '@/components/ui';
 import { colors, darkColors, spacing, layout } from '@/theme';
 import { useRole } from '@/context/RoleContext';
 
 /**
  * Login Screen Component
  * "Willkommen zurück"
- * 3-Section Layout: Header → Form Inputs → Button
+ * 4-Quarter Layout: Titel (25%) → Inputs (25%) → Spacer (25%) → Button (25%)
  */
-
 export default function LoginScreen({ navigation }: any) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
@@ -45,7 +44,7 @@ export default function LoginScreen({ navigation }: any) {
       setLoading(true);
       await login(username, password);
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('[LoginScreen] Login failed:', error);
     } finally {
       setLoading(false);
     }
@@ -55,7 +54,7 @@ export default function LoginScreen({ navigation }: any) {
     ? [darkColors.background.primary, darkColors.background.secondary] as const
     : [colors.background.secondary, colors.background.primary] as const;
 
-  const isFormValid = username.trim() !== '' && password.trim() !== '';
+  const isFormValid = username.length > 0 && password.length > 0;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -66,7 +65,6 @@ export default function LoginScreen({ navigation }: any) {
         style={StyleSheet.absoluteFillObject}
       />
 
-      {/* ✅ KeyboardAvoidingView - Nur Button bewegt sich */}
       <KeyboardAvoidingView
         style={styles.keyboardView}
         {...layout.keyboardAware.withKeyboard}
@@ -78,48 +76,54 @@ export default function LoginScreen({ navigation }: any) {
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            {/* ✅ SECTION 1: Header (Top) */}
-            <View style={styles.topSection}>
+            {/* ✅ QUARTER 1: Titel (25%) */}
+            <View style={[styles.quarter1, layout.sections.quarter1]}>
               <Text 
                 variant="largeTitle" 
                 color="primary" 
                 textAlign="center"
-                style={layout.headerZone}
               >
                 Willkommen zurück
               </Text>
             </View>
 
-            {/* ✅ SECTION 2: Form Inputs (Middle - bewegen sich NICHT) */}
-            <View style={styles.middleSection}>
-              <Input
-                placeholder="Benutzername"
-                value={username}
-                onChangeText={setUsername}
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-              
-              <Input
-                placeholder="Passwort"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                autoCapitalize="none"
-              />
+            {/* ✅ QUARTER 2: Input Fields (25%) */}
+            <View style={[styles.quarter2, layout.sections.quarter2]}>
+              <View style={layout.formZone}>
+                <Input
+                  placeholder="Benutzername"
+                  value={username}
+                  onChangeText={setUsername}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                
+                <Input
+                  placeholder="Passwort"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
             </View>
 
-            {/* ✅ SECTION 3: Button (Bottom - bewegt sich MIT Tastatur) */}
-            <View style={[styles.bottomSection, layout.thumbZone]}>
+            {/* ✅ QUARTER 3: Leerraum (25%) */}
+            <View style={[styles.quarter3, layout.sections.quarter3]} />
+
+            {/* ✅ QUARTER 4: Button auf Daumenhöhe (25%) */}
+            <View style={[styles.quarter4, layout.sections.quarter4]}>
               <Button
                 variant="primary"
                 size="lg"
                 onPress={handleLogin}
-                disabled={!isFormValid || loading}
+                loading={loading}
+                disabled={!isFormValid}
                 accessibilityLabel="Login"
                 accessibilityHint="Doppeltippen um sich anzumelden"
               >
-                {loading ? 'Wird geladen...' : 'Login'}
+                Login
               </Button>
             </View>
 
@@ -141,17 +145,20 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   content: {
-    ...layout.sections.threeSection, // ← 3-Section Pattern
+    ...layout.fourQuarterContainer,
     paddingHorizontal: layout.screenPadding.horizontal,
   },
-  topSection: {
-    // Header bleibt oben, wächst nur für Content
+  quarter1: {
+    // 25% - Titel oben
   },
-  middleSection: {
-    ...layout.formZone, // ← Form-Inputs in der Mitte (bewegen sich NICHT)
+  quarter2: {
+    // 25% - Input Fields
   },
-  bottomSection: {
-    // Button auf Daumenhöhe (bewegt sich MIT Tastatur)
-    // paddingBottom kommt von layout.thumbZone
+  quarter3: {
+    // 25% - Leerraum
+  },
+  quarter4: {
+    // 25% - Button auf Daumenhöhe
+    ...layout.thumbZone,
   },
 });

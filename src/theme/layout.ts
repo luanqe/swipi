@@ -32,45 +32,47 @@ export const layout = {
   },
 
   /**
-   * FORM ZONE (Input-Felder Position)
-   * Zwischen Header und Button
-   * Inputs bleiben fix, bewegen sich NICHT mit Tastatur
-   */
-  formZone: {
-    paddingTop: spacing.md,     // 16px nach Header
-    gap: spacing.md,            // 16px zwischen Inputs
-    // KEIN paddingBottom - wächst nur so viel wie Inputs brauchen
-  },
-
-  /**
-   * SCREEN SECTIONS (Layout-Patterns)
+   * SCREEN SECTIONS (Vertikale Aufteilung)
+   * Für zentrierte/verteilte Layouts
    */
   sections: {
-    // Für Screens MIT Form (Header + Inputs + Button)
-    // z.B. Login, Register, Onboarding
-    threeSection: {
-      flex: 1,
-      justifyContent: 'space-between' as const,
-    },
-    
-    // Für Screens OHNE Form (nur Content + Button)
-    // z.B. Welcome, Role Selection
-    twoSection: {
-      flex: 1,
-      justifyContent: 'space-between' as const,
-    },
-    
-    // Legacy: Top/Middle/Bottom Thirds
+    // Top Third (z.B. Logo, Header)
     topThird: {
       flex: 0.33,
       justifyContent: 'flex-start' as const,
     },
+    
+    // Middle Third (z.B. zentrierter Content wie Role Cards)
     middleThird: {
       flex: 0.34,
       justifyContent: 'center' as const,
     },
+    
+    // Bottom Third (z.B. Buttons, Footer)
     bottomThird: {
       flex: 0.33,
+      justifyContent: 'flex-end' as const,
+    },
+
+    // ✅ 4-Quarter Layout (Login/Register Screens)
+    // Viertel 1: Titel
+    // Viertel 2: Input Fields
+    // Viertel 3: Leerraum (spacer)
+    // Viertel 4: Button auf Daumenhöhe
+    quarter1: {
+      flex: 0.25,
+      justifyContent: 'flex-start' as const,
+    },
+    quarter2: {
+      flex: 0.25,
+      justifyContent: 'flex-start' as const,
+    },
+    quarter3: {
+      flex: 0.25,
+      justifyContent: 'center' as const,
+    },
+    quarter4: {
+      flex: 0.25,
       justifyContent: 'flex-end' as const,
     },
   },
@@ -108,13 +110,28 @@ export const layout = {
   },
 
   /**
+   * FORM ZONE (Input-Felder Position)
+   * Zwischen Header und Button
+   */
+  formZone: {
+    gap: spacing.md, // 16px zwischen Inputs
+  },
+
+  /**
    * CONTENT DISTRIBUTION
-   * Für space-between Layouts (Top Content + Bottom Buttons)
-   * @deprecated Use layout.sections.threeSection or twoSection instead
+   * Für verschiedene Layout-Patterns
    */
   spaceBetween: {
     flex: 1,
     justifyContent: 'space-between' as const,
+  },
+
+  /**
+   * 4-Quarter Container für Login/Register Screens
+   * Feste Aufteilung: 25% Titel, 25% Inputs, 25% Spacer, 25% Button
+   */
+  fourQuarterContainer: {
+    flex: 1,
   },
 };
 

@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    ...layout.sections.twoSection, // ← 2-Section Pattern (kein Form)
+    ...layout.spaceBetween,
     paddingHorizontal: layout.screenPadding.horizontal,
   },
   topSection: {

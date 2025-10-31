@@ -10,16 +10,15 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, Button, Input } from '@/components/ui';
+import { Text, Input, Button } from '@/components/ui';
 import { colors, darkColors, spacing, layout } from '@/theme';
 import { useRole } from '@/context/RoleContext';
 
 /**
  * Register Screen
- * 3-Section Layout: Header → Form Inputs → Button
- * Role wurde VORHER in RoleSelectionScreen gewählt
+ * "Konto erstellen"
+ * 4-Quarter Layout: Titel (25%) → Inputs (25%) → Spacer (25%) → Button (25%)
  */
-
 export default function RegisterScreen({ navigation }: any) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
@@ -46,28 +45,42 @@ export default function RegisterScreen({ navigation }: any) {
   const handleRegister = async () => {
     try {
       setLoading(true);
-      console.log('[RegisterScreen] Registering:', { email, role });
       
+      // TODO: Password validation
+      if (password !== passwordRepeat) {
+        console.error('[RegisterScreen] Passwords do not match');
+        return;
+      }
+      
+      // Register with email and password (role was set before in RoleSelectionScreen)
       await register(email, password);
+      
+      // Save additional data
+      // TODO: Move to register function or onboarding
+      console.log('[RegisterScreen] Additional data:', {
+        username,
+        companyName: role === 'FIRMA' ? companyName : undefined,
+      });
+      
+      // Navigate to Onboarding
       navigation.navigate('OnboardingData');
     } catch (error) {
-      console.error('Registration failed:', error);
+      console.error('[RegisterScreen] Registration failed:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const gradientColors = isDark 
+  const gradientColors = isDark
     ? [darkColors.background.primary, darkColors.background.secondary] as const
     : [colors.background.secondary, colors.background.primary] as const;
 
   const isFormValid = 
-    username.trim() !== '' && 
-    email.trim() !== '' && 
-    password.trim() !== '' &&
-    passwordRepeat.trim() !== '' &&
+    username.length > 0 && 
+    email.length > 0 && 
+    password.length >= 8 && 
     password === passwordRepeat &&
-    (role === 'BEWERBER' || companyName.trim() !== '');
+    (role === 'BEWERBER' || companyName.length > 0);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -89,13 +102,12 @@ export default function RegisterScreen({ navigation }: any) {
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            {/* SECTION 1: Header */}
-            <View style={styles.topSection}>
+            {/* ✅ QUARTER 1: Titel + Untertitel (25%) */}
+            <View style={[styles.quarter1, layout.sections.quarter1]}>
               <Text
                 variant="largeTitle"
                 color="primary"
                 textAlign="center"
-                style={layout.headerZone}
               >
                 Konto erstellen
               </Text>
@@ -109,63 +121,71 @@ export default function RegisterScreen({ navigation }: any) {
               </Text>
             </View>
 
-            {/* SECTION 2: Form Inputs (bewegen sich NICHT) */}
-            <View style={styles.middleSection}>
-              <Input
-                placeholder="Benutzername"
-                value={username}
-                onChangeText={setUsername}
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-              
-              <Input
-                placeholder="E-Mail"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-              
-              <Input
-                placeholder="Passwort (mind. 8 Zeichen)"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                autoCapitalize="none"
-              />
-
-              <Input
-                placeholder="Passwort wiederholen"
-                value={passwordRepeat}
-                onChangeText={setPasswordRepeat}
-                secureTextEntry
-                autoCapitalize="none"
-                error={passwordRepeat && password !== passwordRepeat ? 'Passwörter stimmen nicht überein' : undefined}
-              />
-
-              {role === 'FIRMA' && (
+            {/* ✅ QUARTER 2: Input Fields (25%) */}
+            <View style={[styles.quarter2, layout.sections.quarter2]}>
+              <View style={layout.formZone}>
                 <Input
-                  placeholder="Firmenname"
-                  value={companyName}
-                  onChangeText={setCompanyName}
+                  placeholder="Benutzername"
+                  value={username}
+                  onChangeText={setUsername}
+                  autoCapitalize="none"
                   autoCorrect={false}
                 />
-              )}
+                
+                <Input
+                  placeholder="E-Mail"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                
+                <Input
+                  placeholder="Passwort (mind. 8 Zeichen)"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                
+                <Input
+                  placeholder="Passwort wiederholen"
+                  value={passwordRepeat}
+                  onChangeText={setPasswordRepeat}
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  error={passwordRepeat.length > 0 && password !== passwordRepeat ? 'Passwörter stimmen nicht überein' : undefined}
+                />
+
+                {role === 'FIRMA' && (
+                  <Input
+                    placeholder="Firmenname"
+                    value={companyName}
+                    onChangeText={setCompanyName}
+                    autoCorrect={false}
+                  />
+                )}
+              </View>
             </View>
 
-            {/* SECTION 3: Button (bewegt sich MIT Tastatur) */}
-            <View style={[styles.bottomSection, layout.thumbZone]}>
+            {/* ✅ QUARTER 3: Leerraum (25%) */}
+            <View style={[styles.quarter3, layout.sections.quarter3]} />
+
+            {/* ✅ QUARTER 4: Button auf Daumenhöhe (25%) */}
+            <View style={[styles.quarter4, layout.sections.quarter4]}>
               <Button
                 variant="primary"
                 size="lg"
                 onPress={handleRegister}
-                disabled={!isFormValid || loading}
+                loading={loading}
+                disabled={!isFormValid}
                 accessibilityLabel="Konto erstellen"
-                accessibilityHint="Doppeltippen um ein Konto zu erstellen"
+                accessibilityHint="Doppeltippen um Konto zu erstellen"
               >
-                {loading ? 'Wird erstellt...' : 'Konto erstellen'}
+                Konto erstellen
               </Button>
             </View>
 
@@ -187,19 +207,23 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   content: {
-    ...layout.sections.threeSection,
+    ...layout.fourQuarterContainer,
     paddingHorizontal: layout.screenPadding.horizontal,
   },
-  topSection: {
-    // Header oben
+  quarter1: {
+    // 25% - Titel + Untertitel
   },
   subtitle: {
     marginTop: spacing.sm,
   },
-  middleSection: {
-    ...layout.formZone, // ← Inputs bleiben in der Mitte (bewegen sich NICHT)
+  quarter2: {
+    // 25% - Input Fields
   },
-  bottomSection: {
-    // Button auf Daumenhöhe (bewegt sich MIT Tastatur)
+  quarter3: {
+    // 25% - Leerraum
+  },
+  quarter4: {
+    // 25% - Button auf Daumenhöhe
+    ...layout.thumbZone,
   },
 });

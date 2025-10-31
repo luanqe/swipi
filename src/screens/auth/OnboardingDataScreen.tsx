@@ -197,8 +197,7 @@ export default function OnboardingDataScreen({ navigation }: any) {
               )}
             </View>
 
-            {/* SECTION 2: Form Fields (Middle - bewegen sich NICHT) */}
-            <View style={styles.middleSection}>
+            <View style={[styles.bottomSection, layout.thumbZone]}>
               <DynamicForm
                 fields={currentStep.fields}
                 onSubmit={handleStepSubmit}
@@ -206,9 +205,6 @@ export default function OnboardingDataScreen({ navigation }: any) {
                 initialValues={accumulatedData}
               />
             </View>
-
-            {/* SECTION 3: Submit Button wird von DynamicForm gerendert */}
-            {/* Button automatisch auf Daumenhöhe durch Layout */}
 
           </Animated.View>
         </ScrollView>
@@ -228,7 +224,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   content: {
-    ...layout.sections.threeSection, // ← 3-Section Pattern (Header + Form + Button)
+    ...layout.spaceBetween,
     paddingHorizontal: layout.screenPadding.horizontal,
   },
   topSection: {
@@ -260,9 +256,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     marginTop: spacing.sm,
-  },
-  middleSection: {
-    ...layout.formZone, // ← Form bleibt in der Mitte
   },
   bottomSection: {
     gap: spacing.md,
