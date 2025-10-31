@@ -3,19 +3,14 @@ import { View, ActivityIndicator, StyleSheet, Text, useColorScheme } from 'react
 import { theme } from '@/theme';
 
 /**
- * LoadingIndicator Component
+ * LoadingIndicator
  * 
- * Simple fullscreen spinner used during:
- * - AsyncStorage hydration (App.tsx)
- * - API calls (später)
- * - Screen transitions (später)
- * 
- * Props:
- * - message?: Optional text below spinner
+ * Fullscreen-Spinner für Ladezeiten (AsyncStorage, API-Calls, Transitions).
+ * Unterstützt Dark Mode und optionale Statusmeldung.
  */
 
 interface LoadingIndicatorProps {
-  message?: string;
+  message?: string; // Optionaler Text unter dem Spinner
 }
 
 export default function LoadingIndicator({ message }: LoadingIndicatorProps) {

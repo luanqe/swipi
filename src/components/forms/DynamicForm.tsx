@@ -4,26 +4,26 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   useColorScheme,
   Platform,
 } from 'react-native';
 import { theme } from '@/theme';
+import { Button } from '@/components/ui';
 import type { OnboardingField } from '@/config/onboarding';
 
 /**
- * Dynamic Form Component
+ * DynamicForm
  * 
- * Rendert Input-Fields basierend auf Config
- * Wiederverwendbar für Register, Onboarding, Profile-Edit, etc.
+ * Rendert Formular-Felder basierend auf Config-Array.
+ * Wiederverwendbar für Register, Onboarding, Profile-Edit.
  * 
- * MVP: text, email, password, textarea types
- * PRODUCTION: Erweitern mit select, multiselect, checkbox, radio, image
+ * Aktuell: text, email, password, textarea
+ * Später: select, multiselect, checkbox, radio, image
  */
 
 // ============================================================================
-// TYPE DEFINITIONS
+// TYPES
 // ============================================================================
 
 export interface DynamicFormProps {
@@ -34,7 +34,7 @@ export interface DynamicFormProps {
 }
 
 // ============================================================================
-// MAIN COMPONENT
+// COMPONENT
 // ============================================================================
 
 export default function DynamicForm({
@@ -46,22 +46,16 @@ export default function DynamicForm({
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   
-  // Form State (key-value pairs)
   const [formData, setFormData] = useState<Record<string, any>>(initialValues);
-  
-  // Error State (für Validierung später)
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  /**
-   * Update single field value
-   */
+  // Aktualisiert ein einzelnes Feld und löscht ggf. den Fehler
   const updateField = (fieldName: string, value: any) => {
     setFormData(prev => ({
       ...prev,
       [fieldName]: value,
     }));
     
-    // Clear error when user types
     if (errors[fieldName]) {
       setErrors(prev => {
         const newErrors = { ...prev };
@@ -71,10 +65,7 @@ export default function DynamicForm({
     }
   };
 
-  /**
-   * Validate form (MVP: nur required check)
-   * SPÄTER: Erweitern mit pattern, minLength, etc.
-   */
+  // Validiert Formular (aktuell: required-Check; später: pattern, minLength, etc.)
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
     
@@ -86,7 +77,6 @@ export default function DynamicForm({
           newErrors[field.name] = 'Dieses Feld ist erforderlich';
         }
         
-        // Array (multiselect) validation
         if (Array.isArray(value) && value.length === 0) {
           newErrors[field.name] = 'Bitte wähle mindestens eine Option';
         }
@@ -96,10 +86,6 @@ export default function DynamicForm({
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-  /**
-   * Handle form submission
-   */
   const handleSubmit = () => {
     if (validateForm()) {
       onSubmit(formData);
@@ -107,10 +93,7 @@ export default function DynamicForm({
       console.log('[DynamicForm] Validation failed:', errors);
     }
   };
-
-  /**
-   * Render Field basierend auf Type
-   */
+  // Rendert Feld basierend auf Type
   const renderField = (field: OnboardingField) => {
     const value = formData[field.name] || '';
     const error = errors[field.name];
@@ -162,11 +145,11 @@ export default function DynamicForm({
           />
         );
       
-      // SPÄTER erweitern:
       case 'select':
       case 'multiselect':
       case 'checkbox':
       case 'radio':
+        // Placeholder für zukünftige Field-Types
         return (
           <View key={field.name} style={styles.fieldContainer}>
             <Text style={[styles.label, isDark && styles.labelDark]}>
@@ -185,7 +168,6 @@ export default function DynamicForm({
 
   return (
     <View style={styles.container}>
-      {/* Fields */}
       <ScrollView 
         style={styles.fieldsContainer}
         showsVerticalScrollIndicator={false}
@@ -194,24 +176,21 @@ export default function DynamicForm({
         {fields.map(field => renderField(field))}
       </ScrollView>
 
-      {/* Submit Button */}
-      <TouchableOpacity
-        style={styles.submitButton}
+      <Button
+        variant="primary"
+        size="lg"
+        fullWidth
         onPress={handleSubmit}
-        accessible={true}
-        accessibilityRole="button"
         accessibilityLabel={submitButtonText}
       >
-        <Text style={styles.submitButtonText}>
-          {submitButtonText}
-        </Text>
-      </TouchableOpacity>
+        {submitButtonText}
+      </Button>
     </View>
   );
 }
 
 // ============================================================================
-// FORM INPUT COMPONENT
+// FORM INPUT
 // ============================================================================
 
 interface FormInputProps {
@@ -243,12 +222,10 @@ function FormInput({
 }: FormInputProps) {
   return (
     <View style={styles.fieldContainer}>
-      {/* Label */}
       <Text style={[styles.label, isDark && styles.labelDark]}>
         {label}
       </Text>
 
-      {/* Input */}
       <TextInput
         style={[
           styles.input,
@@ -269,7 +246,6 @@ function FormInput({
         textAlignVertical={multiline ? 'top' : 'center'}
       />
 
-      {/* Error Message */}
       {error && (
         <Text style={styles.errorText}>
           {error}
@@ -292,12 +268,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   
-  // Field Container
   fieldContainer: {
     marginBottom: theme.spacing.lg,
   },
   
-  // Label
   label: {
     ...theme.typography.subhead,
     color: theme.colors.neutral[900],
@@ -308,7 +282,6 @@ const styles = StyleSheet.create({
     color: theme.darkColors.neutral[900],
   },
   
-  // Input
   input: {
     ...theme.typography.body,
     backgroundColor: theme.colors.background.primary,
@@ -333,14 +306,12 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.error,
   },
   
-  // Error Message
   errorText: {
     ...theme.typography.caption1,
     color: theme.colors.error,
     marginTop: theme.spacing.xs,
   },
   
-  // Placeholder (für nicht-implementierte Field-Types)
   placeholder: {
     ...theme.typography.body,
     color: theme.colors.neutral[600],
@@ -348,21 +319,5 @@ const styles = StyleSheet.create({
   },
   placeholderDark: {
     color: theme.darkColors.neutral[600],
-  },
-  
-  // Submit Button
-  submitButton: {
-    backgroundColor: theme.colors.primary[500],
-    borderRadius: theme.borderRadius.md,
-    minHeight: 56,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...theme.shadows.sm,
-  },
-  submitButtonText: {
-    ...theme.typography.body,
-    color: '#FFFFFF',
-    fontWeight: '600',
-    fontSize: 17,
   },
 });

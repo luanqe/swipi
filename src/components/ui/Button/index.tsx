@@ -6,18 +6,20 @@ import {
   ActivityIndicator,
   View,
   Platform,
+  useColorScheme,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { ButtonProps } from './Button.types';
 import { createButtonStyles } from './Button.styles';
-import { colors } from '@/theme';
+import { theme } from '@/theme';
 
 /**
  * Button Component
  * 
  * Wiederverwendbare Button-Komponente mit:
- * - Primary/Secondary Variants
- * - Size Options (md, lg)
+ * - Primary/Secondary/Tertiary Variants
+ * - Size Options (sm, md, lg)
+ * - Dark Mode Support
  * - Haptic Feedback (iOS)
  * - Loading State
  * - Accessibility Support
@@ -27,12 +29,21 @@ import { colors } from '@/theme';
  * <Button variant="primary" size="lg" onPress={handlePress}>
  *   Weiter
  * </Button>
+ * 
+ * <Button variant="secondary" size="md" fullWidth onPress={handlePress}>
+ *   Abbrechen
+ * </Button>
+ * 
+ * <Button variant="tertiary" size="sm" onPress={handlePress}>
+ *   Überspringen
+ * </Button>
  */
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'lg',
   disabled = false,
   loading = false,
+  fullWidth = false,
   children,
   onPress,
   leftIcon,
@@ -42,8 +53,11 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   textStyle,
 }) => {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+  
   const scale = useRef(new Animated.Value(1)).current;
-  const styles = createButtonStyles(variant, size, disabled || loading);
+  const styles = createButtonStyles(variant, size, disabled || loading, isDark, fullWidth);
 
   const handlePressIn = () => {
     // Haptic Feedback (iOS only)
@@ -72,6 +86,12 @@ export const Button: React.FC<ButtonProps> = ({
     }
   };
 
+  // Spinner Color basierend auf Variant
+  const getSpinnerColor = () => {
+    if (variant === 'primary') return '#FFFFFF';
+    return isDark ? theme.darkColors.primary[500] : theme.colors.primary[500];
+  };
+
   return (
     <TouchableOpacity
       onPress={handlePress}
@@ -94,7 +114,7 @@ export const Button: React.FC<ButtonProps> = ({
       >
         {loading ? (
           <ActivityIndicator 
-            color={variant === 'primary' ? '#FFFFFF' : colors.primary[500]} 
+            color={getSpinnerColor()} 
             size="small"
           />
         ) : (

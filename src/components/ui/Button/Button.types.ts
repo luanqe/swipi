@@ -1,19 +1,21 @@
 import { ReactNode } from 'react';
 import { ViewStyle, TextStyle } from 'react-native';
 
-export type ButtonVariant = 'primary' | 'secondary';
-export type ButtonSize = 'md' | 'lg';
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
+export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps {
   /**
    * Button variant styling
    * - primary: Filled background, white text
    * - secondary: Transparent background, bordered, primary text
+   * - tertiary: Text only, no background, no border
    */
   variant?: ButtonVariant;
   
   /**
    * Button size
+   * - sm: Small height (44px) - iOS minimum touch target
    * - md: Standard height (48px)
    * - lg: Large height (56px) - Default for CTA buttons
    */
@@ -38,6 +40,11 @@ export interface ButtonProps {
    * Press handler
    */
   onPress: () => void;
+  
+  /**
+   * Full width (takes 100% of parent width)
+   */
+  fullWidth?: boolean;
   
   /**
    * Optional left icon
