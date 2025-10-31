@@ -12,6 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '@/theme';
+import { layout } from '@/theme/layout';
 import { useRole } from '@/context/RoleContext';
 
 /**
@@ -61,42 +62,41 @@ export default function RoleSelectionScreen({ navigation }: any) {
 
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         
-        {/* Header */}
+        {/* ✅ HEADER: Titel */}
         <View style={styles.header}>
           <Text style={[styles.headline, isDark && styles.textDark]}>
             Welche Rolle hast du?
           </Text>
         </View>
 
-        {/* Spacer - creates centered layout */}
+        {/* ✅ SPACER: Flexibler Abstand */}
         <View style={styles.spacer} />
 
-        {/* Role Cards - centered in lower half */}
-        <View style={styles.rolesContainer}>
-          
-          {/* Bewerber Card */}
-          <RoleCard
-            title="Bewerber"
-            icon="👤"
-            onPress={() => handleRoleSelect('BEWERBER')}
-            isDark={isDark}
-            accessibilityLabel="Bewerber Rolle auswählen"
-            accessibilityHint="Doppeltippen um als Bewerber fortzufahren"
-          />
+        {/* ✅ FOOTER: Role Cards auf Daumenhöhe */}
+        <View style={styles.footer}>
+          <View style={styles.rolesContainer}>
+            
+            {/* Bewerber Card */}
+            <RoleCard
+              title="Bewerber"
+              icon="👤"
+              onPress={() => handleRoleSelect('BEWERBER')}
+              isDark={isDark}
+              accessibilityLabel="Bewerber Rolle auswählen"
+              accessibilityHint="Doppeltippen um als Bewerber fortzufahren"
+            />
 
-          {/* Firma Card */}
-          <RoleCard
-            title="Firma"
-            icon="🏢"
-            onPress={() => handleRoleSelect('FIRMA')}
-            isDark={isDark}
-            accessibilityLabel="Firma Rolle auswählen"
-            accessibilityHint="Doppeltippen um als Firma fortzufahren"
-          />
+            {/* Firma Card */}
+            <RoleCard
+              title="Firma"
+              icon="🏢"
+              onPress={() => handleRoleSelect('FIRMA')}
+              isDark={isDark}
+              accessibilityLabel="Firma Rolle auswählen"
+              accessibilityHint="Doppeltippen um als Firma fortzufahren"
+            />
+          </View>
         </View>
-
-        {/* Spacer - creates centered layout */}
-        <View style={styles.spacer} />
 
       </Animated.View>
     </SafeAreaView>
@@ -169,14 +169,15 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.xxxl,
+    paddingHorizontal: layout.screenPadding.horizontal,
   },
   
-  // Header (Top Section)
-  header: {
-    alignItems: 'center',
-  },
+  // ✅ Zentrale Layout-Zonen
+  header: layout.verticalDistribution.header,
+  spacer: layout.verticalDistribution.spacer,
+  footer: layout.verticalDistribution.footer,
+  
+  // Screen-spezifische Styles
   headline: {
     ...theme.typography.largeTitle,
     color: theme.colors.neutral[900],
@@ -184,12 +185,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // Spacer - creates vertical centering
-  spacer: {
-    flex: 1,
-  },
-
-  // Roles Container - centered in lower half
+  // Roles Container
   rolesContainer: {
     flexDirection: 'row',
     gap: theme.spacing.md,

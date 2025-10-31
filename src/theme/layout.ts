@@ -25,15 +25,63 @@ export const layout = {
   /**
    * HEADER ZONE (Titel-Position)
    * Konsistente Position für Screen-Titel
+   * @param dense - Reduzierter Abstand für kompaktere Layouts
    */
-  headerZone: {
-    paddingTop: spacing.xxxl, // 64px - Einheitlich für alle Screens
+  headerZone: (dense = false) => ({
+    paddingTop: dense ? spacing.xl : spacing.xxxl, // 32px oder 64px
     marginBottom: spacing.xl, // 32px - Abstand zu Content
+  }),
+
+  /**
+   * VERTICAL DISTRIBUTION (Semantische Layout-Zonen)
+   * Dynamische Aufteilung für Login/Register/Auth Screens
+   */
+  verticalDistribution: {
+    /**
+     * Header Zone - Titel & Beschreibung
+     * Wächst nur so viel wie Content braucht
+     */
+    header: {
+      paddingTop: spacing.xxxl,     // 64px - Titel nach unten (konsistent mit RoleSelection)
+      marginBottom: spacing.lg,     // 24px - Abstand zu Form
+    },
+
+    /**
+     * Form Zone - Input Fields & Content
+     * Wächst dynamisch, scrollbar wenn nötig
+     */
+    form: {
+      flexGrow: 1,                  // Nimmt verfügbaren Platz
+      justifyContent: 'flex-start' as const,
+      gap: spacing.sm,              // 8px zwischen Inputs (kompakt)
+    },
+
+    /**
+     * Spacer Zone - Flexibler Abstand
+     * Verhindert, dass Inputs zu nah an Buttons kommen
+     */
+    spacer: {
+      flexShrink: 0.2,              // Komprimiert leicht bei Platzmangel
+      minHeight: spacing.xl,        // 32px Minimum-Abstand
+    },
+
+    /**
+     * Footer Zone - CTA Buttons auf Daumenhöhe
+     * Bleibt fix am unteren Rand
+     */
+    footer: {
+      paddingBottom: Platform.select({
+        ios: spacing.lg,            // 24px
+        android: spacing.xl,        // 32px
+        default: spacing.lg,
+      }),
+      gap: spacing.md,              // 16px zwischen Buttons
+    },
   },
 
   /**
    * SCREEN SECTIONS (Vertikale Aufteilung)
-   * Für zentrierte/verteilte Layouts
+   * Für zentrierte/verteilte Layouts (z.B. Onboarding, Role Selection)
    */
   sections: {
     // Top Third (z.B. Logo, Header)
@@ -51,28 +99,6 @@ export const layout = {
     // Bottom Third (z.B. Buttons, Footer)
     bottomThird: {
       flex: 0.33,
-      justifyContent: 'flex-end' as const,
-    },
-
-    // ✅ 4-Quarter Layout (Login/Register Screens)
-    // Viertel 1: Titel
-    // Viertel 2: Input Fields
-    // Viertel 3: Leerraum (spacer)
-    // Viertel 4: Button auf Daumenhöhe
-    quarter1: {
-      flex: 0.25,
-      justifyContent: 'flex-start' as const,
-    },
-    quarter2: {
-      flex: 0.25,
-      justifyContent: 'flex-start' as const,
-    },
-    quarter3: {
-      flex: 0.25,
-      justifyContent: 'center' as const,
-    },
-    quarter4: {
-      flex: 0.25,
       justifyContent: 'flex-end' as const,
     },
   },
@@ -110,14 +136,6 @@ export const layout = {
   },
 
   /**
-   * FORM ZONE (Input-Felder Position)
-   * Zwischen Header und Button
-   */
-  formZone: {
-    gap: spacing.md, // 16px zwischen Inputs
-  },
-
-  /**
    * CONTENT DISTRIBUTION
    * Für verschiedene Layout-Patterns
    */
@@ -125,19 +143,11 @@ export const layout = {
     flex: 1,
     justifyContent: 'space-between' as const,
   },
-
-  /**
-   * 4-Quarter Container für Login/Register Screens
-   * Feste Aufteilung: 25% Titel, 25% Inputs, 25% Spacer, 25% Button
-   */
-  fourQuarterContainer: {
-    flex: 1,
-  },
 };
 
 /**
  * Convenience Helper für direkten Import
- * Gleicher Wert wie layout.thumbZone.paddingBottom
+ * Gleicher Wert wie verticalDistribution.footer.paddingBottom
  * Häufig genutzt für Bottom Sections mit Buttons auf Daumenhöhe
  */
 export const bottomPadding = Platform.select({

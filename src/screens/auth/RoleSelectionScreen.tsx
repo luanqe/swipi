@@ -54,18 +54,22 @@ export default function RoleSelectionScreen({ navigation }: any) {
       {/* ✅ KEIN KeyboardAvoidingView - keine Tastatur */}
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         
-        <View style={styles.topSection}>
+        {/* ✅ HEADER: Titel */}
+        <View style={styles.header}>
           <Text
             variant="largeTitle"
             color="primary"
             textAlign="center"
-            style={layout.headerZone}
           >
             Welche Rolle hast du?
           </Text>
         </View>
 
-        <View style={styles.middleSection}>
+        {/* ✅ SPACER: Flexibler Abstand */}
+        <View style={styles.spacer} />
+
+        {/* ✅ FOOTER: Role Cards auf Daumenhöhe */}
+        <View style={styles.footer}>
           <View style={styles.rolesContainer}>
             <RoleCard
               title="Bewerber"
@@ -85,8 +89,6 @@ export default function RoleSelectionScreen({ navigation }: any) {
           </View>
         </View>
 
-        <View style={styles.bottomSpacer} />
-
       </Animated.View>
     </SafeAreaView>
   );
@@ -97,21 +99,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    ...layout.spaceBetween,
+    flex: 1,
     paddingHorizontal: layout.screenPadding.horizontal,
   },
-  topSection: {
-    // Header bleibt oben
-  },
-  middleSection: {
-    flex: 1,
-    justifyContent: 'center',
-  },
+  
+  // ✅ Zentrale Layout-Zonen
+  header: layout.verticalDistribution.header,
+  spacer: layout.verticalDistribution.spacer,
+  footer: layout.verticalDistribution.footer,
+  
+  // Screen-spezifische Styles
   rolesContainer: {
     flexDirection: 'row',
     gap: spacing.md,
-  },
-  bottomSpacer: {
-    height: spacing.xxxl,
   },
 });

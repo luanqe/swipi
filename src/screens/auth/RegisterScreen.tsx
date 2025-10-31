@@ -102,8 +102,8 @@ export default function RegisterScreen({ navigation }: any) {
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            {/* ✅ QUARTER 1: Titel + Untertitel (25%) */}
-            <View style={[styles.quarter1, layout.sections.quarter1]}>
+            {/* ✅ HEADER: Titel + Untertitel */}
+            <View style={styles.header}>
               <Text
                 variant="largeTitle"
                 color="primary"
@@ -121,61 +121,59 @@ export default function RegisterScreen({ navigation }: any) {
               </Text>
             </View>
 
-            {/* ✅ QUARTER 2: Input Fields (25%) */}
-            <View style={[styles.quarter2, layout.sections.quarter2]}>
-              <View style={layout.formZone}>
-                <Input
-                  placeholder="Benutzername"
-                  value={username}
-                  onChangeText={setUsername}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-                
-                <Input
-                  placeholder="E-Mail"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-                
-                <Input
-                  placeholder="Passwort (mind. 8 Zeichen)"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-                
-                <Input
-                  placeholder="Passwort wiederholen"
-                  value={passwordRepeat}
-                  onChangeText={setPasswordRepeat}
-                  secureTextEntry
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  error={passwordRepeat.length > 0 && password !== passwordRepeat ? 'Passwörter stimmen nicht überein' : undefined}
-                />
+            {/* ✅ FORM: Input Fields */}
+            <View style={styles.form}>
+              <Input
+                placeholder="Benutzername"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              
+              <Input
+                placeholder="E-Mail"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              
+              <Input
+                placeholder="Passwort (mind. 8 Zeichen)"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              
+              <Input
+                placeholder="Passwort wiederholen"
+                value={passwordRepeat}
+                onChangeText={setPasswordRepeat}
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+                error={passwordRepeat.length > 0 && password !== passwordRepeat ? 'Passwörter stimmen nicht überein' : undefined}
+              />
 
-                {role === 'FIRMA' && (
-                  <Input
-                    placeholder="Firmenname"
-                    value={companyName}
-                    onChangeText={setCompanyName}
-                    autoCorrect={false}
-                  />
-                )}
-              </View>
+              {role === 'FIRMA' && (
+                <Input
+                  placeholder="Firmenname"
+                  value={companyName}
+                  onChangeText={setCompanyName}
+                  autoCorrect={false}
+                />
+              )}
             </View>
 
-            {/* ✅ QUARTER 3: Leerraum (25%) */}
-            <View style={[styles.quarter3, layout.sections.quarter3]} />
+            {/* ✅ SPACER: Flexibler Abstand */}
+            <View style={styles.spacer} />
 
-            {/* ✅ QUARTER 4: Button auf Daumenhöhe (25%) */}
-            <View style={[styles.quarter4, layout.sections.quarter4]}>
+            {/* ✅ FOOTER: Button auf Daumenhöhe */}
+            <View style={styles.footer}>
               <Button
                 variant="primary"
                 size="lg"
@@ -207,23 +205,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   content: {
-    ...layout.fourQuarterContainer,
+    flex: 1,
     paddingHorizontal: layout.screenPadding.horizontal,
   },
-  quarter1: {
-    // 25% - Titel + Untertitel
-  },
+  header: layout.verticalDistribution.header,
   subtitle: {
     marginTop: spacing.sm,
   },
-  quarter2: {
-    // 25% - Input Fields
-  },
-  quarter3: {
-    // 25% - Leerraum
-  },
-  quarter4: {
-    // 25% - Button auf Daumenhöhe
-    ...layout.thumbZone,
-  },
+  form: layout.verticalDistribution.form,
+  spacer: layout.verticalDistribution.spacer,
+  footer: layout.verticalDistribution.footer,
 });

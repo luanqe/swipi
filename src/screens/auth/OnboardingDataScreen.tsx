@@ -148,7 +148,8 @@ export default function OnboardingDataScreen({ navigation }: any) {
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            <View style={styles.topSection}>
+            {/* ✅ HEADER: Progress + Titel */}
+            <View style={styles.header}>
               {/* Back Button */}
               {currentStepIndex > 0 && (
                 <TouchableOpacity 
@@ -197,7 +198,11 @@ export default function OnboardingDataScreen({ navigation }: any) {
               )}
             </View>
 
-            <View style={[styles.bottomSection, layout.thumbZone]}>
+            {/* ✅ SPACER: Flexibler Abstand */}
+            <View style={styles.spacer} />
+
+            {/* ✅ FOOTER: Form auf Daumenhöhe */}
+            <View style={styles.footer}>
               <DynamicForm
                 fields={currentStep.fields}
                 onSubmit={handleStepSubmit}
@@ -224,12 +229,16 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   content: {
-    ...layout.spaceBetween,
+    flex: 1,
     paddingHorizontal: layout.screenPadding.horizontal,
   },
-  topSection: {
-    // Wächst nur so viel wie Content braucht
-  },
+  
+  // ✅ Zentrale Layout-Zonen
+  header: layout.verticalDistribution.header,
+  spacer: layout.verticalDistribution.spacer,
+  footer: layout.verticalDistribution.footer,
+  
+  // Screen-spezifische Styles
   backButton: {
     marginBottom: spacing.md,
     alignSelf: 'flex-start',
@@ -256,9 +265,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     marginTop: spacing.sm,
-  },
-  bottomSection: {
-    gap: spacing.md,
   },
   errorContainer: {
     flex: 1,
