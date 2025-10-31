@@ -19,10 +19,9 @@ import OnboardingDataScreen from '@/screens/auth/OnboardingDataScreen';
  * - isOnboardingComplete
  * - role
  * 
- * 3-Stage Flow:
- * 1. !isAuthenticated → AuthStack (Welcome, Login, Register, RoleSelect)
- * 2. isAuthenticated && !isOnboardingComplete → OnboardingStack
- * 3. isAuthenticated && isOnboardingComplete → RoleStack (Bewerber/Firma)
+ * 2-Stage Flow:
+ * 1. !isAuthenticated || !isOnboardingComplete → AuthStack (Welcome, Login, Register, RoleSelect, Onboarding)
+ * 2. isAuthenticated && isOnboardingComplete → RoleStack (Bewerber/Firma)
  * 
  * MVP: Placeholder für Swipe Screens
  * PRODUCTION: Erweitern mit echten Main Stacks
@@ -40,23 +39,15 @@ export default function RoleNavigator() {
   });
 
   // ============================================================================
-  // STAGE 1: Not Authenticated → Auth Stack
+  // STAGE 1: Not Authenticated OR Onboarding Incomplete → Auth Stack
   // ============================================================================
   
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !isOnboardingComplete) {
     return <AuthStack />;
   }
 
   // ============================================================================
-  // STAGE 2: Authenticated but Onboarding Incomplete → Onboarding Stack
-  // ============================================================================
-  
-  if (isAuthenticated && !isOnboardingComplete) {
-    return <OnboardingStack />;
-  }
-
-  // ============================================================================
-  // STAGE 3: Authenticated + Onboarding Complete → Role-based Stack
+  // STAGE 2: Authenticated + Onboarding Complete → Role-based Stack
   // ============================================================================
   
   if (role === 'BEWERBER') {
@@ -72,7 +63,7 @@ export default function RoleNavigator() {
 }
 
 // ============================================================================
-// AUTH STACK (Welcome, Login, Register, RoleSelection)
+// AUTH STACK (Welcome, Login, Register, RoleSelection, Onboarding)
 // ============================================================================
 
 function AuthStack() {
@@ -81,6 +72,8 @@ function AuthStack() {
       initialRouteName="Welcome" // ← Start at Welcome (Splash handled by App.tsx)
       screenOptions={{
         headerShown: false,
+        gestureEnabled: true, // ← Swipe-Back für gesamten Auth-Flow
+        gestureDirection: 'horizontal',
         cardStyleInterpolator: ({ current }) => ({
           cardStyle: {
             opacity: current.progress,
@@ -93,21 +86,8 @@ function AuthStack() {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="RoleSelection" component={RoleSelectionScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
-    </Stack.Navigator>
-  );
-}
-
-// ============================================================================
-// ONBOARDING STACK (Only OnboardingData Screen)
-// ============================================================================
-
-function OnboardingStack() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
+      
+      {/* Onboarding als Teil des Auth-Flows */}
       <Stack.Screen name="OnboardingData" component={OnboardingDataScreen} />
     </Stack.Navigator>
   );
@@ -134,6 +114,7 @@ function BewerberStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        gestureEnabled: false, // ← Swipe-Back deaktiviert (Swipe für Jobs!)
       }}
     >
       <Stack.Screen name="SwipeJobs" component={PlaceholderSwipeJobs} />
@@ -168,6 +149,7 @@ function FirmaStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        gestureEnabled: false, // ← Swipe-Back deaktiviert (Swipe für Bewerber!)
       }}
     >
       <Stack.Screen name="SwipeBewerber" component={PlaceholderSwipeBewerber} />

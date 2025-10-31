@@ -652,39 +652,61 @@ const styles = StyleSheet.create({
 
 
 ## 🎨 Software Architektur & Prinzipien
-- SOLID Principles: [Link](https://de.wikipedia.org/wiki/SOLID)
-- IMMER best practice
-- Habe immer das große Ganze im Blick
-- sauberen, effizienten Code schreiben!
-- klare Trennung von Logik und UI
-- standartisierte Nomenklatur bei Variablen/Methoden usw. (z.B. camelCase für Variablen, PascalCase für Komponenten) und nicht einmal Deutsch einmal Englisch oder so. Und verständlich benennen!
-- IMMER einheitliche Patterns, keine Inkonstistenzen. Zum Beispiel: Button auf Daumenhöhe: einmal dynamisch, einmal feste Höhe -> nein beide dynamisch!
-- DRY (Don't Repeat Yourself)
-- Saubere Ordnerstruktur!
-- Du schreibst Code für Menschen nicht für Maschinen!
-- Schreibe Kommentare wo nötig, aber nicht zu viel. Klarer Code braucht weniger Kommentare.
-- Vermeide unnötige Komplexität. Halte den Code so einfach wie möglich.
-- Löse Probleme auf die eleganteste Weise.
-- Wenn Probleme auftreten, ist es keine Lösung, einfach "quick fixes" zu machen. Finde die Wurzel des Problems und behebe es richtig. Zum Beispiel: Wenn eine Fehlermeldung erscheint, ist es keine Lösung, einfach die Fehlermeldung zu unterdrücken. Finde heraus, warum sie auftritt und behebe das Problem an der Quelle.
-- Wenn etwas nicht funnktioniert, suche nach der Ursache und behebe sie, anstatt nur die Symptome zu behandeln. Außerdem ist es keine Lösung den Code der nicht funktioniert zu ignorieren und stattdessen neuen Code zu schreiben.
-- Erstelle wiederverwendbare UI-Komponenten (wie Buttons, Text, Input-Felder, Cards, Avatars, Error, Success... und so weiter), Styles, Variants die einfach importiert und genutzt werden können, damit nichts neu definiert werden muss
-- Versuche immer vorauszuplanen, was in der Zukunft benötigt wird, und baue es von Anfang an richtig auf, anstatt später alles umzubauen und zu refactoren. Analogie: Alle nötigen Samen für einen Garten von Anfang an pflanzen, anstatt später alles neu zu bepflanzen.
-- Improvisiere nicht. Wenn ich dir einen Prompt und eine Aufgabe gebe, halte dich genau daran und improvisiere nicht, indem du einfach Funktionen, Dinge einbaust die nicht verlangt worden sind. Wenn du etwas nicht verstehst, frage nach, anstatt es zu erraten oder zu improvisieren.
-- Vermeide unbedingt Quick Fixes und Workarounds. Diese führen nur zu technischem Schulden und zukünftigen Problemen.
-- Arbeite langsam und sorgfältig, nicht schnell und schlampig. Qualität über Quantität. Wir haben Zeit, also nutze sie weise. Nimm immer einen tiefen Atemzug bevor du mit der Arbeit beginnst, um dich zu fokussieren und klar zu denken.
-- Mach dir immer zuerst ein Bild was die Aufgabe ist, was du vor hast, dann fang an zu coden.
-- Bitte mach eine saubere logische übersichtliche Ordnerstruktur, keine unübersichtlichen Strukturen wo alles durcheinander ist. Halte dich an bewährte Strukturen für React Native/Expo Projekte. Ich lege Wert auf Ordnung und Struktur. Ich hasse Chaos!
-- Gib Variablen, Funktionen, Komponenten immer klare, verständliche Namen. Keine Abkürzungen oder unverständlichen Begriffe.
-- Ich bin dein Chef. Was ich sage, ist Gesetz. Befolge meine Anweisungen genau so, wie ich sie gebe. Wenn du etwas nicht verstehst, frage nach, anstatt es zu erraten oder zu improvisieren.
-- Konsistenz in der UI und im Code ist das A und O. Halte dich immer an die definierten Patterns, Styles, Prinzipien. Keine Ausnahmen.
-- Responsives Design: Stelle sicher, dass die App auf verschiedenen Bildschirmgrößen und -auflösungen gut aussieht und funktioniert.
-- Anstatt zu denken "Ich erstelle eine isolierte Komponente" denke dir immer: Wie fügt sich das in UNSER Gesamtsystem ein? Wie interagiert es mit anderen Komponenten? Wie kann es wiederverwendet werden? Wie benutze ich bereits existierende Komponenten/Styles/Patterns? Root solution! Keine Symptom-Behandlung! Keine Improvisation!
--Frag dich immer:
-  - Gibt es bereits Components dafür?
-  - Welche Theme-Werte brauche ich?
-  - Folge ich bestehende Patterns?
-  - Ist es erweiterbar?
 
+IMMER Best Practices, SOLID befolgen, großes Ganze mitdenken.
+
+Logik strikt von UI trennen.
+
+Konsistente Patterns ohne Ausnahmen (z. B. „Button auf Daumenhöhe“: nicht einmal dynamisch, einmal fix → beide dynamisch).
+
+DRY: Wiederholungen vermeiden.
+
+Einfachheit vor Komplexität; elegante Lösungen bevorzugen.
+
+Root-Cause statt Quick Fixes: Fehlermeldungen nicht unterdrücken, Ursache finden und beheben; kaputten Code nicht ignorieren und neu daneben bauen.
+
+Zukunft mitplanen: von Anfang an erweiterbar bauen (lieber „Samen richtig setzen“ als später umbauen).
+
+## Code-Qualität & Stil
+
+Sauber, effizient, für Menschen schreiben.
+
+Namen klar & sprechend, keine Abkürzungen, keine Sprachmischung (z. B. camelCase für Variablen, PascalCase für Komponenten).
+
+Kommentare nur wo nötig – klarer Code braucht weniger Kommentare.
+
+Keine Improvisation: Anforderungen exakt umsetzen; bei Unklarheit nachfragen.
+
+Langsam & sorgfältig arbeiten: Qualität > Quantität; vor dem Start kurz fokussieren (tief durchatmen).
+
+Vor dem Coden Aufgabe klären: Plan machen, dann umsetzen.
+
+Responsives Design für alle Größen und Auflösungen.
+
+## Struktur & Wiederverwendung
+
+Saubere Ordnerstruktur, bewährte Konventionen (bes. React Native/Expo); kein Chaos.
+
+Wiederverwendbare UI-Bausteine bereitstellen (Buttons, Text, Inputs, Cards, Avatars, Error/Success etc.), inklusive Styles und Variants – einfach importierbar.
+
+Immer prüfen: Gibt’s schon eine Komponente? Welche Theme-Werte? Folgst du bestehenden Patterns? Ist es erweiterbar?
+
+## UX & Konsistenz
+
+Konsistenz in UI und Code ist Pflicht (Patterns, Styles, Prinzipien strikt einhalten).
+
+UX-Best Practices beachten (CRUP-Prinzipien, Usability-Heuristiken, Nielsen Norman Group).
+
+Immer Nutzerperspektive mitdenken.
+
+## Zusammenarbeit & Verhalten
+
+Anweisungen strikt befolgen („Chef-Modus“): Was vorgegeben ist, gilt. Bei Unklarheit fragen, nicht raten.
+
+Bei Fragen zu Funktionen/Code: Codebase gründlich analysieren bzw. relevante Stellen suchen, bevor du antwortest. Keine Vermutungen, nur Fakten; bei Lücken nachfragen.
+
+## DAS WICHTIGSTE
+KEIN OVER-ENGINEERING. Keep it simple and clean!!!!!!
 ----
 
 **Letzte Aktualisierung**: 29. Oktober 2025  
