@@ -74,7 +74,7 @@ export default function RegisterScreen({ navigation }: any) {
     (role === 'BEWERBER' || companyName.length > 0);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       
       <LinearGradient

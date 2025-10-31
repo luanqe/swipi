@@ -33,8 +33,43 @@ export const layout = {
   }),
 
   /**
+   * ONBOARDING SCREEN LAYOUT
+   * Standardisiertes Pattern für alle Onboarding-Screens
+   * (Welcome, Login, Register, OnboardingData)
+   * 
+   * Struktur:
+   * - Top: Titel/Logo mit festem Abstand
+   * - Middle: Input-Felder (wächst mit Content)
+   * - Bottom: Buttons auf Daumenhöhe mit Safe-Area-Abstand
+   * 
+   * Verwendung mit SafeAreaView edges={['top', 'bottom']} + justifyContent: 'space-between'
+   */
+  onboardingScreen: {
+    /**
+     * Top Section - Titel, Logo, Header
+     */
+    topSection: {
+      paddingTop: spacing.xxxl,     // 64px - Einheitlicher Top-Abstand
+    },
+    
+    /**
+     * Bottom Section - Buttons auf Daumenhöhe
+     * Verwendet mit SafeAreaView edges={['bottom']} für System-Safe-Area
+     */
+    bottomSection: {
+      paddingBottom: Platform.select({
+        ios: spacing.lg,            // 24px (+ SafeArea)
+        android: spacing.xl,        // 32px (+ SafeArea)
+        default: spacing.lg,
+      }),
+      gap: spacing.md,              // 16px zwischen Buttons
+    },
+  },
+
+  /**
    * VERTICAL DISTRIBUTION (Semantische Layout-Zonen)
-   * Dynamische Aufteilung für Login/Register/Auth Screens
+   * Legacy-Pattern für Login/Register/Auth Screens mit Inputs
+   * Wird weiterhin unterstützt für Screens mit KeyboardAvoidingView
    */
   verticalDistribution: {
     /**

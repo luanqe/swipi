@@ -58,6 +58,7 @@ export const Logo: React.FC<LogoProps> = ({
       borderWidth: 2,
       borderColor: isDark ? darkColors.neutral[400] : colors.neutral[300],
       alignItems: 'center',
+      alignSelf: 'center', 
       justifyContent: 'center',
       marginBottom: size === 'large' ? spacing.xl : 0,
     },

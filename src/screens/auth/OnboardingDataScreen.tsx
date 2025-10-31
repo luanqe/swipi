@@ -129,7 +129,7 @@ export default function OnboardingDataScreen({ navigation }: any) {
     : [colors.background.secondary, colors.background.primary] as const;
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       
       <LinearGradient

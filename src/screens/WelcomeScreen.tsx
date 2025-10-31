@@ -30,7 +30,7 @@ export default function WelcomeScreen({ navigation }: any) {
     : [colors.background.secondary, colors.background.primary] as const;
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       
       <LinearGradient
@@ -40,16 +40,14 @@ export default function WelcomeScreen({ navigation }: any) {
 
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         
-        <View style={styles.header}>
+        <View style={styles.topSection}>
           <Logo size="large" animated />
           <Text variant="title2" style={styles.slogan} textAlign="center">
             Wer swiped der findet.
           </Text>
         </View>
 
-        <View style={styles.spacer} />
-
-        <View style={styles.footer}>
+        <View style={styles.bottomSection}>
           <Button
             variant="primary"
             size="lg"
@@ -83,12 +81,12 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: layout.screenPadding.horizontal,
+    justifyContent: 'space-between',
   },
   
-  // ✅ Zentrale Layout-Zonen
-  header: layout.verticalDistribution.header,
-  spacer: layout.verticalDistribution.spacer,
-  footer: layout.verticalDistribution.footer,
+  // ✅ Standardisiertes Onboarding Layout
+  topSection: layout.onboardingScreen.topSection,
+  bottomSection: layout.onboardingScreen.bottomSection,
   
   // Screen-spezifische Styles
   slogan: {

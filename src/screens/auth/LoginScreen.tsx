@@ -56,7 +56,7 @@ export default function LoginScreen({ navigation }: any) {
   const isFormValid = username.length > 0 && password.length > 0;
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       
       <LinearGradient

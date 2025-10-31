@@ -710,6 +710,7 @@ Bei Fragen zu Funktionen/Code: Codebase gründlich analysieren bzw. relevante St
 ## DAS WICHTIGSTE
 KEIN OVER-ENGINEERING. Keep it simple and clean!!!!!!
 Es geht um Leben oder Tod. Qualität ist alles. Ich warne dich.
+Dir ist es nicht erlaubt zu raten. Kein wahrscheinlich, kein vielleicht, kein vermutlich. Nur 100% sicher sein.
 ----
 
 **Letzte Aktualisierung**: 29. Oktober 2025  
