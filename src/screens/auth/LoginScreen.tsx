@@ -17,7 +17,6 @@ import { useRole } from '@/context/RoleContext';
 /**
  * Login Screen Component
  * "Willkommen zurück"
- * 4-Quarter Layout: Titel (25%) → Inputs (25%) → Spacer (25%) → Button (25%)
  */
 export default function LoginScreen({ navigation }: any) {
   const colorScheme = useColorScheme();
@@ -76,18 +75,16 @@ export default function LoginScreen({ navigation }: any) {
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            {/* ✅ HEADER: Titel */}
             <View style={styles.header}>
               <Text 
                 variant="largeTitle" 
                 color="primary" 
                 textAlign="center"
               >
-                Willkommen zurück
+                Willkommen zurück!
               </Text>
             </View>
 
-            {/* ✅ FORM: Input Fields */}
             <View style={styles.form}>
               <Input
                 placeholder="Benutzername"
@@ -107,10 +104,8 @@ export default function LoginScreen({ navigation }: any) {
               />
             </View>
 
-            {/* ✅ SPACER: Flexibler Abstand */}
             <View style={styles.spacer} />
 
-            {/* ✅ FOOTER: Button auf Daumenhöhe */}
             <View style={styles.footer}>
               <Button
                 variant="primary"

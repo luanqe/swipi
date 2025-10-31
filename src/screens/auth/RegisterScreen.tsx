@@ -17,7 +17,6 @@ import { useRole } from '@/context/RoleContext';
 /**
  * Register Screen
  * "Konto erstellen"
- * 4-Quarter Layout: Titel (25%) → Inputs (25%) → Spacer (25%) → Button (25%)
  */
 export default function RegisterScreen({ navigation }: any) {
   const colorScheme = useColorScheme();
@@ -28,7 +27,6 @@ export default function RegisterScreen({ navigation }: any) {
   const [username, setUsername] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [passwordRepeat, setPasswordRepeat] = React.useState('');
   const [companyName, setCompanyName] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   
@@ -45,12 +43,6 @@ export default function RegisterScreen({ navigation }: any) {
   const handleRegister = async () => {
     try {
       setLoading(true);
-      
-      // TODO: Password validation
-      if (password !== passwordRepeat) {
-        console.error('[RegisterScreen] Passwords do not match');
-        return;
-      }
       
       // Register with email and password (role was set before in RoleSelectionScreen)
       await register(email, password);
@@ -78,8 +70,7 @@ export default function RegisterScreen({ navigation }: any) {
   const isFormValid = 
     username.length > 0 && 
     email.length > 0 && 
-    password.length >= 8 && 
-    password === passwordRepeat &&
+    password.length >= 8 &&
     (role === 'BEWERBER' || companyName.length > 0);
 
   return (
@@ -102,7 +93,6 @@ export default function RegisterScreen({ navigation }: any) {
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            {/* ✅ HEADER: Titel + Untertitel */}
             <View style={styles.header}>
               <Text
                 variant="largeTitle"
@@ -121,7 +111,6 @@ export default function RegisterScreen({ navigation }: any) {
               </Text>
             </View>
 
-            {/* ✅ FORM: Input Fields */}
             <View style={styles.form}>
               <Input
                 placeholder="Benutzername"
@@ -141,22 +130,12 @@ export default function RegisterScreen({ navigation }: any) {
               />
               
               <Input
-                placeholder="Passwort (mind. 8 Zeichen)"
+                placeholder="Passwort"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
                 autoCapitalize="none"
                 autoCorrect={false}
-              />
-              
-              <Input
-                placeholder="Passwort wiederholen"
-                value={passwordRepeat}
-                onChangeText={setPasswordRepeat}
-                secureTextEntry
-                autoCapitalize="none"
-                autoCorrect={false}
-                error={passwordRepeat.length > 0 && password !== passwordRepeat ? 'Passwörter stimmen nicht überein' : undefined}
               />
 
               {role === 'FIRMA' && (
@@ -169,10 +148,8 @@ export default function RegisterScreen({ navigation }: any) {
               )}
             </View>
 
-            {/* ✅ SPACER: Flexibler Abstand */}
             <View style={styles.spacer} />
 
-            {/* ✅ FOOTER: Button auf Daumenhöhe */}
             <View style={styles.footer}>
               <Button
                 variant="primary"

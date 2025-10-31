@@ -673,7 +673,7 @@ Sauber, effizient, für Menschen schreiben.
 
 Namen klar & sprechend, keine Abkürzungen, keine Sprachmischung (z. B. camelCase für Variablen, PascalCase für Komponenten).
 
-Kommentare nur wo nötig – klarer Code braucht weniger Kommentare.
+Kommentare nur wo nötig – klarer Code braucht weniger Kommentare. Kommentare auf Deutsch. Alle!
 
 Keine Improvisation: Anforderungen exakt umsetzen; bei Unklarheit nachfragen.
 
@@ -699,6 +699,8 @@ UX-Best Practices beachten (CRUP-Prinzipien, Usability-Heuristiken, Nielsen Norm
 
 Immer Nutzerperspektive mitdenken.
 
+Unser Design entspricht Apple, Human Interface Guidelines, Material 3, professionelle Job-Plattformen (LinkedIn, Indeed).
+
 ## Zusammenarbeit & Verhalten
 
 Anweisungen strikt befolgen („Chef-Modus“): Was vorgegeben ist, gilt. Bei Unklarheit fragen, nicht raten.
@@ -707,6 +709,7 @@ Bei Fragen zu Funktionen/Code: Codebase gründlich analysieren bzw. relevante St
 
 ## DAS WICHTIGSTE
 KEIN OVER-ENGINEERING. Keep it simple and clean!!!!!!
+Es geht um Leben oder Tod. Qualität ist alles. Ich warne dich.
 ----
 
 **Letzte Aktualisierung**: 29. Oktober 2025  

@@ -148,7 +148,6 @@ export default function OnboardingDataScreen({ navigation }: any) {
         >
           <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
             
-            {/* ✅ HEADER: Progress + Titel */}
             <View style={styles.header}>
               {/* Back Button */}
               {currentStepIndex > 0 && (
@@ -198,10 +197,8 @@ export default function OnboardingDataScreen({ navigation }: any) {
               )}
             </View>
 
-            {/* ✅ SPACER: Flexibler Abstand */}
             <View style={styles.spacer} />
 
-            {/* ✅ FOOTER: Form auf Daumenhöhe */}
             <View style={styles.footer}>
               <DynamicForm
                 fields={currentStep.fields}

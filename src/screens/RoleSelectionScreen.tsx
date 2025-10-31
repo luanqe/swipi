@@ -62,17 +62,14 @@ export default function RoleSelectionScreen({ navigation }: any) {
 
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         
-        {/* ✅ HEADER: Titel */}
         <View style={styles.header}>
           <Text style={[styles.headline, isDark && styles.textDark]}>
             Welche Rolle hast du?
           </Text>
         </View>
 
-        {/* ✅ SPACER: Flexibler Abstand */}
         <View style={styles.spacer} />
 
-        {/* ✅ FOOTER: Role Cards auf Daumenhöhe */}
         <View style={styles.footer}>
           <View style={styles.rolesContainer}>
             

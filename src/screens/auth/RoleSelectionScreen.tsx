@@ -51,10 +51,8 @@ export default function RoleSelectionScreen({ navigation }: any) {
         style={StyleSheet.absoluteFillObject}
       />
 
-      {/* ✅ KEIN KeyboardAvoidingView - keine Tastatur */}
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         
-        {/* ✅ HEADER: Titel */}
         <View style={styles.header}>
           <Text
             variant="largeTitle"
@@ -65,10 +63,8 @@ export default function RoleSelectionScreen({ navigation }: any) {
           </Text>
         </View>
 
-        {/* ✅ SPACER: Flexibler Abstand */}
         <View style={styles.spacer} />
 
-        {/* ✅ FOOTER: Role Cards auf Daumenhöhe */}
         <View style={styles.footer}>
           <View style={styles.rolesContainer}>
             <RoleCard

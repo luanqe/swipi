@@ -50,10 +50,10 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
       }),
     ]).start();
 
-    // Call onFinish after animation (2.5s total)
+    // Call onFinish after animation (1.25s total)
     const timer = setTimeout(() => {
       onFinish?.();
-    }, 2500);
+    }, 1250);
 
     return () => clearTimeout(timer);
   }, [onFinish]);
