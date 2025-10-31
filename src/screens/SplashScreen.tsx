@@ -1,24 +1,26 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Animated,
-  Dimensions,
   useColorScheme,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Logo, Text } from '@/components/ui';
 import { theme } from '@/theme';
-
-const { width, height } = Dimensions.get('window');
 
 /**
  * Splash Screen Component
- * Displays the Swipi logo with animated entrance
+ * 
+ * Zeigt Swipi Logo mit smooth Entrance Animation
+ * - Fade + Scale: 800ms
+ * - Gesamtdauer: 1.8s (professionelles Timing)
+ * - Pulse Dots: Subtile Lade-Animation
  * 
  * Props:
- * - onFinish: Callback nach Animation (2.5s)
+ * - onFinish: Callback nach Animation
  * 
  * Usage:
  * <SplashScreen onFinish={() => setShowSplash(false)} />
@@ -34,8 +36,10 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
   
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const scaleAnim = React.useRef(new Animated.Value(0.8)).current;
+  const pulseAnim = React.useRef(new Animated.Value(1)).current;
 
   React.useEffect(() => {
+    // Logo entrance animation
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -50,16 +54,32 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
       }),
     ]).start();
 
-    // Call onFinish after animation (1.25s total)
+    // Pulse animation for loading dots
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 0.5,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    // Auto-dismiss after 1.8 seconds
     const timer = setTimeout(() => {
       onFinish?.();
-    }, 1250);
+    }, 1800);
 
     return () => clearTimeout(timer);
   }, [onFinish]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <StatusBar style="light" />
       
       <LinearGradient
@@ -71,86 +91,62 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
 
       <Animated.View
         style={[
-          styles.logoContainer,
+          styles.content,
           {
             opacity: fadeAnim,
             transform: [{ scale: scaleAnim }],
           },
         ]}
       >
-        {/* Logo Icon - Simplified Swipe Gesture */}
-        <View style={styles.logoIcon}>
-          <View style={styles.card}>
-            <View style={styles.cardHighlight} />
-          </View>
-          <View style={[styles.card, styles.cardSecond]}>
-            <View style={styles.cardHighlight} />
-          </View>
-        </View>
+        {/* ✅ Wiederverwendbare Logo-Komponente */}
+        <Logo size="large" animated={false} />
 
         {/* App Name */}
-        <Text style={styles.appName}>Swipi</Text>
-        <Text style={styles.tagline}>Find Your Dream Job</Text>
+        <Text style={styles.appName}>
+          Swipi
+        </Text>
+        <Text style={styles.tagline}>
+          Find Your Dream Job
+        </Text>
       </Animated.View>
 
-      {/* Bottom Indicator */}
+      {/* Bottom Loading Indicator mit Pulse */}
       <View style={styles.bottomContainer}>
         <View style={styles.loadingDots}>
-          <View style={styles.dot} />
-          <View style={[styles.dot, styles.dotActive]} />
-          <View style={styles.dot} />
+          <Animated.View style={[styles.dot, { opacity: pulseAnim }]} />
+          <Animated.View 
+            style={[
+              styles.dot, 
+              styles.dotActive,
+              { opacity: pulseAnim }
+            ]} 
+          />
+          <Animated.View style={[styles.dot, { opacity: pulseAnim }]} />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  content: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logoContainer: {
-    alignItems: 'center',
-  },
-  logoIcon: {
-    width: 120,
-    height: 120,
-    marginBottom: theme.spacing.lg,
-    position: 'relative',
-  },
-  card: {
-    position: 'absolute',
-    width: 100,
-    height: 140,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: theme.borderRadius.xl,
-    ...theme.shadows.lg,
-    left: 10,
-    top: -10,
-  },
-  cardSecond: {
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    transform: [{ rotate: '8deg' }, { translateX: -5 }, { translateY: 5 }],
-    zIndex: -1,
-  },
-  cardHighlight: {
-    position: 'absolute',
-    top: theme.spacing.md,
-    left: theme.spacing.md,
-    right: theme.spacing.md,
-    height: 8,
-    backgroundColor: theme.colors.primary[500],
-    borderRadius: theme.borderRadius.sm,
-  },
   appName: {
-    ...theme.typography.largeTitle,
     color: '#FFFFFF',
-    fontWeight: '800',
+    fontWeight: '700',
     fontSize: 48,
+    lineHeight: 58, // ← FIX: Größerer lineHeight (48 * 1.2 = 58)
+    marginTop: theme.spacing.lg,
     marginBottom: theme.spacing.xs,
     letterSpacing: -1,
+    paddingTop: 4, // ← FIX: Extra Padding für iOS Text Clipping
   },
   tagline: {
     ...theme.typography.subhead,
@@ -161,8 +157,8 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     position: 'absolute',
-    bottom: 60,
-    alignItems: 'center',
+    bottom: theme.spacing.xxxl,
+    alignSelf: 'center',
   },
   loadingDots: {
     flexDirection: 'row',
@@ -172,7 +168,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
   },
   dotActive: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',

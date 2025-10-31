@@ -55,8 +55,6 @@ export const Logo: React.FC<LogoProps> = ({
       width: dimensions.circle,
       height: dimensions.circle,
       borderRadius: dimensions.circle / 2,
-      borderWidth: 2,
-      borderColor: isDark ? darkColors.neutral[400] : colors.neutral[300],
       alignItems: 'center',
       alignSelf: 'center', 
       justifyContent: 'center',
