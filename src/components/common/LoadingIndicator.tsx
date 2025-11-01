@@ -5,8 +5,9 @@ import { theme } from '@/theme';
 /**
  * LoadingIndicator
  * 
- * Fullscreen-Spinner für Ladezeiten (AsyncStorage, API-Calls, Transitions).
+ * Fullscreen-Spinner (Kreisförmiger Ladebalken) für Ladezeiten (AsyncStorage, API-Calls, Transitions).
  * Unterstützt Dark Mode und optionale Statusmeldung.
+ * Kann einfach importiert und in verschiedenen Screens/Komponenten wiederverwendet werden.
  */
 
 interface LoadingIndicatorProps {
