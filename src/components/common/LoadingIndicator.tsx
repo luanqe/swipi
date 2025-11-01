@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, ActivityIndicator, StyleSheet, Text, useColorScheme } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import { theme } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
  * LoadingIndicator
@@ -15,22 +16,21 @@ interface LoadingIndicatorProps {
 }
 
 export default function LoadingIndicator({ message }: LoadingIndicatorProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark, activeColors } = useTheme();
 
   return (
     <View style={[
       styles.container,
-      { backgroundColor: isDark ? theme.colors.background.primary : theme.colors.background.secondary }
+      { backgroundColor: isDark ? activeColors.background.primary : activeColors.background.secondary }
     ]}>
       <ActivityIndicator 
         size="large" 
-        color={theme.colors.primary[500]} 
+        color={activeColors.primary[500]} 
       />
       {message && (
         <Text style={[
           styles.message,
-          { color: isDark ? theme.colors.neutral[300] : theme.colors.neutral[700] }
+          { color: isDark ? activeColors.neutral[300] : activeColors.neutral[700] }
         ]}>
           {message}
         </Text>

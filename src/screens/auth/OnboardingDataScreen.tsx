@@ -1,8 +1,7 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
-  useColorScheme,
   Animated,
   KeyboardAvoidingView,
   ScrollView,
@@ -14,8 +13,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '@/components/ui';
 import DynamicForm from '@/components/forms/DynamicForm';
 import { getOnboardingSteps, getTotalSteps } from '@/config/onboarding';
-import { colors, darkColors, spacing, layout } from '@/theme';
+import { colors, spacing, layout, getGradientColors } from '@/theme';
 import { useRole } from '@/context/RoleContext';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
  * Onboarding Data Screen
@@ -34,8 +34,7 @@ import { useRole } from '@/context/RoleContext';
  */
 
 export default function OnboardingDataScreen({ navigation }: any) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark } = useTheme();
   
   const { role, saveUserData, completeOnboarding } = useRole();
   
@@ -124,9 +123,7 @@ export default function OnboardingDataScreen({ navigation }: any) {
     );
   }
 
-  const gradientColors = isDark 
-    ? [darkColors.background.primary, darkColors.background.secondary] as const
-    : [colors.background.secondary, colors.background.primary] as const;
+  const gradientColors = getGradientColors(isDark);
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>

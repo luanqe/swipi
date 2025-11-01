@@ -191,4 +191,10 @@ export const bottomPadding = Platform.select({
   default: spacing.lg,
 });
 
+/**
+ * Re-export getGradientColors aus colors.ts für Rückwärtskompatibilität
+ * (Gehört konzeptionell zu Colors, nicht Layout)
+ */
+export { getGradientColors } from './colors';
+
 export default layout;

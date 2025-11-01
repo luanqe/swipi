@@ -5,7 +5,7 @@
  * Barrel Export: Importiert alle Theme-Tokens aus separaten Dateien
  */
 
-export { colors, darkColors } from './colors';
+export { colors, darkColors, getGradientColors } from './colors';
 export { typography } from './typography';
 export { spacing } from './spacing';
 export { borderRadius } from './borderRadius';

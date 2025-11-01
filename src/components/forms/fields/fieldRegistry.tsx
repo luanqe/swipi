@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import type { OnboardingField } from '@/config/onboarding';
 import { FormInput } from './FormInput';
+import { fieldStyles } from './sharedStyles';
 import { theme } from '@/theme';
 
 /**
@@ -80,8 +81,8 @@ function TextareaFieldComponent({ field, value, onChange, error, isDark }: Field
 // Placeholder Component (für noch nicht implementierte Types)
 function PlaceholderFieldComponent({ field, isDark }: FieldComponentProps) {
   return (
-    <View style={styles.fieldContainer}>
-      <Text style={[styles.label, isDark && styles.labelDark]}>
+    <View style={fieldStyles.fieldContainer}>
+      <Text style={[fieldStyles.label, isDark && fieldStyles.labelDark]}>
         {field.label}
       </Text>
       <Text style={[styles.placeholder, isDark && styles.placeholderDark]}>
@@ -112,24 +113,10 @@ export const fieldRegistry: Record<FieldType, FieldComponent> = {
 };
 
 // ============================================================================
-// STYLES (nur für Placeholder)
+// STYLES (nur Placeholder-spezifische Styles, shared styles in sharedStyles.ts)
 // ============================================================================
 
 const styles = StyleSheet.create({
-  fieldContainer: {
-    marginBottom: theme.spacing.lg,
-  },
-  
-  label: {
-    ...theme.typography.subhead,
-    color: theme.colors.neutral[900],
-    fontWeight: '600',
-    marginBottom: theme.spacing.sm,
-  },
-  labelDark: {
-    color: theme.darkColors.neutral[900],
-  },
-  
   placeholder: {
     ...theme.typography.body,
     color: theme.colors.neutral[600],

@@ -79,3 +79,24 @@ export const darkColors = {
     overlay:   'rgba(0, 0, 0, 0.6)',
   }
 };
+
+/**
+ * Gradient Colors Helper
+ * 
+ * Wiederverwendbare Funktion für konsistente Gradient-Backgrounds
+ * in allen Auth/Onboarding Screens.
+ * 
+ * Vermeidet Code-Duplikation in:
+ * - WelcomeScreen
+ * - LoginScreen
+ * - RegisterScreen
+ * - RoleSelectionScreen
+ * - OnboardingDataScreen
+ * 
+ * @param isDark - Dark Mode Status (useColorScheme() === 'dark')
+ * @returns Tuple mit 2 Farben für LinearGradient
+ */
+export const getGradientColors = (isDark: boolean) => 
+  isDark 
+    ? [darkColors.background.primary, darkColors.background.secondary] as const
+    : [colors.background.secondary, colors.background.primary] as const;

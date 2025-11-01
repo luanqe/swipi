@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Animated,
-  useColorScheme,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
@@ -31,9 +30,6 @@ interface SplashScreenProps {
 }
 
 export default function SplashScreen({ onFinish }: SplashScreenProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
-  
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const scaleAnim = React.useRef(new Animated.Value(0.8)).current;
   const pulseAnim = React.useRef(new Animated.Value(1)).current;

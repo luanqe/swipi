@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import {
   View,
   StyleSheet,
-  useColorScheme,
   Animated,
   KeyboardAvoidingView,
   ScrollView,
@@ -11,16 +10,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, Input, Button } from '@/components/ui';
-import { colors, darkColors, spacing, layout } from '@/theme';
+import { layout, getGradientColors } from '@/theme';
 import { useRole } from '@/context/RoleContext';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
  * Login Screen Component
  * "Willkommen zurück"
  */
 export default function LoginScreen({ navigation }: any) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark } = useTheme();
   
   const { login } = useRole();
   
@@ -49,9 +48,7 @@ export default function LoginScreen({ navigation }: any) {
     }
   };
 
-  const gradientColors = isDark 
-    ? [darkColors.background.primary, darkColors.background.secondary] as const
-    : [colors.background.secondary, colors.background.primary] as const;
+  const gradientColors = getGradientColors(isDark);
 
   const isFormValid = username.length > 0 && password.length > 0;
 

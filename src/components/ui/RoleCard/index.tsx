@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
-import { TouchableOpacity, View, StyleSheet, Animated, useColorScheme, Platform } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, Animated, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Text } from '@/components/ui';
-import { colors, darkColors, spacing, borderRadius, shadows } from '@/theme';
+import { spacing, borderRadius, shadows } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 
 interface RoleCardProps {
   /**
@@ -49,8 +50,7 @@ export const RoleCard: React.FC<RoleCardProps> = ({
   accessibilityLabel,
   accessibilityHint,
 }) => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { activeColors } = useTheme();
   const scale = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
@@ -75,8 +75,6 @@ export const RoleCard: React.FC<RoleCardProps> = ({
       useNativeDriver: true,
     }).start();
   };
-
-  const activeColors = isDark ? darkColors : colors;
 
   return (
     <TouchableOpacity

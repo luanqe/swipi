@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, useColorScheme, Animated } from 'react-native';
+import { View, StyleSheet, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Text, Logo } from '@/components/ui';
-import { colors, darkColors, layout } from '@/theme';
+import { layout, getGradientColors } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
  * Welcome Screen Component
@@ -12,8 +13,7 @@ import { colors, darkColors, layout } from '@/theme';
  * Buttons positioned at thumb-reachable height
  */
 export default function WelcomeScreen({ navigation }: any) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark } = useTheme();
   
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
 
@@ -25,9 +25,7 @@ export default function WelcomeScreen({ navigation }: any) {
     }).start();
   }, []);
   
-  const gradientColors = isDark 
-    ? [darkColors.background.primary, darkColors.background.secondary] as const
-    : [colors.background.secondary, colors.background.primary] as const;
+  const gradientColors = getGradientColors(isDark);
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>

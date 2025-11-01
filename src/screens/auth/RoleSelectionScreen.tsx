@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Animated, useColorScheme } from 'react-native';
+import { View, StyleSheet, Animated } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text, RoleCard } from '@/components/ui';
-import { colors, darkColors, spacing, layout } from '@/theme';
+import { spacing, layout, getGradientColors } from '@/theme';
 import { useRole } from '@/context/RoleContext';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
  * Role Selection Screen
@@ -13,8 +14,7 @@ import { useRole } from '@/context/RoleContext';
  * Bewerber oder Firma
  */
 export default function RoleSelectionScreen({ navigation }: any) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark } = useTheme();
   
   const { setRole } = useRole();
   
@@ -38,9 +38,7 @@ export default function RoleSelectionScreen({ navigation }: any) {
     navigation.navigate('Register');
   };
 
-  const gradientColors = isDark 
-    ? [darkColors.background.primary, darkColors.background.secondary] as const
-    : [colors.background.secondary, colors.background.primary] as const;
+  const gradientColors = getGradientColors(isDark);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>

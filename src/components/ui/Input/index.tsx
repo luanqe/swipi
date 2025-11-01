@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, TextInput as RNTextInput, useColorScheme } from 'react-native';
+import { View, TextInput as RNTextInput } from 'react-native';
 import { Text } from '@/components/ui/Text';
 import { InputProps } from './Input.types';
 import { createInputStyles } from './Input.styles';
-import { colors, darkColors } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
  * Input Component
@@ -35,13 +35,13 @@ export const Input: React.FC<InputProps> = ({
   keyboardType = 'default',
   autoCapitalize = 'none',
   autoCorrect = false,
+  multiline = false,
+  numberOfLines = 1,
   ...props
 }) => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark, activeColors } = useTheme();
   
-  const styles = createInputStyles(!!error, isDark);
-  const activeColors = isDark ? darkColors : colors;
+  const styles = createInputStyles(!!error, isDark, multiline);
 
   return (
     <View style={styles.container}>
@@ -63,6 +63,9 @@ export const Input: React.FC<InputProps> = ({
         keyboardType={keyboardType}
         autoCapitalize={autoCapitalize}
         autoCorrect={autoCorrect}
+        multiline={multiline}
+        numberOfLines={multiline ? numberOfLines : undefined}
+        textAlignVertical={multiline ? 'top' : 'center'}
         accessible={true}
         accessibilityLabel={label || placeholder}
         {...props}

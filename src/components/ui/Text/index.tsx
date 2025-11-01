@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text as RNText, useColorScheme } from 'react-native';
+import { Text as RNText } from 'react-native';
 import { TextProps } from './Text.types';
 import { createTextStyles } from './Text.styles';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
  * Text Component
@@ -29,8 +30,7 @@ export const Text: React.FC<TextProps> = ({
   textAlign,
   style,
 }) => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark } = useTheme();
   
   const styles = createTextStyles(variant, color, isDark);
 

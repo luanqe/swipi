@@ -45,4 +45,14 @@ export interface InputProps extends Omit<TextInputProps, 'style'> {
    * Auto correct
    */
   autoCorrect?: boolean;
+  
+  /**
+   * Multiline support (Textarea)
+   */
+  multiline?: boolean;
+  
+  /**
+   * Number of lines (for multiline)
+   */
+  numberOfLines?: number;
 }

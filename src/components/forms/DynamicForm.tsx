@@ -3,12 +3,12 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  useColorScheme,
 } from 'react-native';
 import { Button } from '@/components/ui';
 import { useFormState } from './hooks/useFormState';
 import { useFormValidation } from './hooks/useFormValidation';
 import { fieldRegistry } from './fields/fieldRegistry';
+import { useTheme } from '@/hooks/useTheme';
 import type { DynamicFormProps } from './types';
 import type { OnboardingField } from '@/config/onboarding';
 
@@ -30,8 +30,7 @@ export default function DynamicForm({
   submitButtonText = 'Weiter',
   initialValues = {},
 }: DynamicFormProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark } = useTheme();
 
   // Separation of Concerns (SRP)
   const { formData, updateField } = useFormState(initialValues);

@@ -6,12 +6,12 @@ import {
   ActivityIndicator,
   View,
   Platform,
-  useColorScheme,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { ButtonProps } from './Button.types';
 import { createButtonStyles } from './Button.styles';
 import { theme } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
  * Button Component
@@ -53,8 +53,7 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   textStyle,
 }) => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark, activeColors } = useTheme();
   
   const scale = useRef(new Animated.Value(1)).current;
   const styles = createButtonStyles(variant, size, disabled || loading, isDark, fullWidth);
@@ -89,7 +88,7 @@ export const Button: React.FC<ButtonProps> = ({
   // Spinner Color basierend auf Variant
   const getSpinnerColor = () => {
     if (variant === 'primary') return '#FFFFFF';
-    return isDark ? theme.darkColors.primary[500] : theme.colors.primary[500];
+    return activeColors.primary[500];
   };
 
   return (
