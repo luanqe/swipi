@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StorageService } from '../services/storage';
+import { AuthService } from '../services/auth';
 
 /**
  * Role Context
@@ -10,8 +11,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
  * - Authentication Status
  * - Onboarding Completion Status
  * 
- * MVP: Mock-Funktionen (keine Backend-Integration)
- * PRODUCTION: Erweitert mit API-Calls und AsyncStorage
+ * Prinzipien:
+ * ✅ Single Responsibility: Nur State-Management (keine Business-Logik, keine Storage-Logik)
+ * ✅ DRY: Keine duplizierten Calls (delegiert an AuthService + StorageService)
+ * ✅ Dependency Inversion: Nutzt Service-Interfaces (nicht direkt AsyncStorage/API)
+ * ✅ State/Storage Sync: Garantiert dass State und Storage IMMER synchron sind
+ * 
+ * Architektur:
+ * - RoleContext (State) → AuthService (Business) → API (Backend)
+ * - RoleContext (State) → StorageService (Persistence) → AsyncStorage
+ * 
+ * MVP: AuthService mit Mocks
+ * PRODUCTION: AuthService mit echten API-Calls
  */
 
 // ============================================================================
@@ -60,9 +71,9 @@ export interface RoleContextType {
   userData: UserData;
   isAuthenticated: boolean;
   isOnboardingComplete: boolean;
-  isHydrated: boolean; // ← NEU: Zeigt ob AsyncStorage geladen wurde
+  isHydrated: boolean; // ← Zeigt ob Storage geladen wurde
   
-  // Actions (async für AsyncStorage persistence)
+  // Actions (async für Storage persistence via StorageService)
   setRole: (role: UserRole) => Promise<void>;
   saveUserData: (data: Partial<UserData>) => Promise<void>;
   completeOnboarding: () => Promise<void>;
@@ -92,10 +103,10 @@ export function RoleProvider({ children }: RoleProviderProps) {
   const [userData, setUserData] = useState<UserData>({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
-  const [isHydrated, setIsHydrated] = useState(false); // ← NEU: Hydration Status
+  const [isHydrated, setIsHydrated] = useState(false); // ← Hydration Status
 
   // ============================================================================
-  // PERSISTENCE - HYDRATE FROM ASYNCSTORAGE ON APP START
+  // PERSISTENCE - HYDRATE FROM STORAGE ON APP START
   // ============================================================================
 
   useEffect(() => {
@@ -106,50 +117,33 @@ export function RoleProvider({ children }: RoleProviderProps) {
    * Hydrate State from AsyncStorage
    * Called once on app start
    * 
-   * MVP: Loads all persisted data
+   * MVP: Loads all persisted data via StorageService
    * PRODUCTION: Add error recovery, migration logic
    */
   const hydrateFromStorage = async () => {
     try {
-      console.log('[RoleContext] Hydrating from AsyncStorage...');
+      console.log('[RoleContext] Hydrating from storage...');
       
-      // Read all keys in parallel for performance
-      const [
-        storedToken,
-        storedRole,
-        storedUserData,
-        storedOnboarding,
-      ] = await Promise.all([
-        AsyncStorage.getItem('authToken'),
-        AsyncStorage.getItem('userRole'),
-        AsyncStorage.getItem('userData'),
-        AsyncStorage.getItem('onboardingComplete'),
-      ]);
+      // Load all data in parallel via StorageService
+      const data = await StorageService.hydrateAll();
 
       // Restore state if data exists
-      if (storedToken) {
+      if (data.authToken) {
         setIsAuthenticated(true);
         console.log('[RoleContext] Auth token found');
       }
 
-      if (storedRole) {
-        setRoleState(storedRole as UserRole);
-        console.log('[RoleContext] Role restored:', storedRole);
+      if (data.userRole) {
+        setRoleState(data.userRole as UserRole);
+        console.log('[RoleContext] Role restored:', data.userRole);
       }
 
-      if (storedUserData) {
-        try {
-          const parsedData = JSON.parse(storedUserData);
-          setUserData(parsedData);
-          console.log('[RoleContext] User data restored');
-        } catch (parseError) {
-          console.error('[RoleContext] Failed to parse user data:', parseError);
-          // Clear corrupted data
-          await AsyncStorage.removeItem('userData');
-        }
+      if (data.userData) {
+        setUserData(data.userData as UserData);
+        console.log('[RoleContext] User data restored');
       }
 
-      if (storedOnboarding === 'true') {
+      if (data.onboardingComplete) {
         setIsOnboardingComplete(true);
         console.log('[RoleContext] Onboarding marked as complete');
       }
@@ -171,22 +165,18 @@ export function RoleProvider({ children }: RoleProviderProps) {
    * Set User Role
    * Called by RoleSelectionScreen during registration
    * 
-   * MVP: Speichert in State + AsyncStorage
-   * PRODUCTION: await AsyncStorage.setItem('role', role);
+   * MVP: Speichert in State + StorageService
+   * PRODUCTION: await authService.setRole(role);
    */
   const setRole = async (newRole: UserRole) => {
     setRoleState(newRole);
     console.log('[RoleContext] Role set:', newRole);
     
-    // Persist to AsyncStorage
-    try {
-      if (newRole) {
-        await AsyncStorage.setItem('userRole', newRole);
-      } else {
-        await AsyncStorage.removeItem('userRole');
-      }
-    } catch (error) {
-      console.error('[RoleContext] Failed to persist role:', error);
+    // Persist via StorageService
+    if (newRole) {
+      await StorageService.UserRole.save(newRole); // ⚠️ KRITISCH: rethrow=true
+    } else {
+      await StorageService.UserRole.remove();
     }
   };
 
@@ -194,195 +184,179 @@ export function RoleProvider({ children }: RoleProviderProps) {
    * Save User Data
    * Called by OnboardingScreen to store user information
    * 
-   * MVP: Merges data into state + AsyncStorage
-   * PRODUCTION: await AsyncStorage.setItem('userData', JSON.stringify(data));
+   * MVP: Merges data into state + StorageService
+   * PRODUCTION: await authService.updateUserData(data);
    */
   const saveUserData = async (data: Partial<UserData>) => {
     const mergedData = { ...userData, ...data };
     setUserData(mergedData);
     console.log('[RoleContext] User data saved:', data);
     
-    // Persist to AsyncStorage
-    try {
-      await AsyncStorage.setItem('userData', JSON.stringify(mergedData));
-    } catch (error) {
-      console.error('[RoleContext] Failed to persist user data:', error);
-    }
+    // Persist via StorageService
+    await StorageService.UserData.save(mergedData); // ⚠️ KRITISCH: rethrow=true
   };
 
   /**
    * Complete Onboarding
    * Called when user finishes all onboarding steps
    * 
-   * MVP: Sets flag to true + AsyncStorage
+   * MVP: Sets flag to true + StorageService
    * PRODUCTION: await authService.updateProfile({ onboardingComplete: true });
    */
   const completeOnboarding = async () => {
     setIsOnboardingComplete(true);
     console.log('[RoleContext] Onboarding completed');
     
-    // Persist to AsyncStorage
-    try {
-      await AsyncStorage.setItem('onboardingComplete', 'true');
-    } catch (error) {
-      console.error('[RoleContext] Failed to persist onboarding status:', error);
-    }
+    // Persist via StorageService
+    await StorageService.Onboarding.save(true); // ✅ NICHT-KRITISCH: rethrow=false (silent fail)
   };
 
   /**
    * Login (Existing User)
    * User already has account, skip onboarding
    * 
-   * MVP: Mock - accepts any credentials + persists to AsyncStorage
-   * PRODUCTION: 
-   *   const response = await authService.login(email, password);
-   *   setRole(response.user.role);
-   *   saveUserData(response.user);
-   *   setIsOnboardingComplete(response.user.onboardingComplete);
-   *   await AsyncStorage.setItem('token', response.token);
+   * Verwendet AuthService für Business-Logik.
+   * Context übernimmt State-Management + Storage-Persistence.
+   * 
+   * State/Storage Synchronisation:
+   * 1. AuthService.login() → AuthResponse
+   * 2. State setzen (role, userData, isAuthenticated, isOnboardingComplete)
+   * 3. Storage speichern (token, role, userData, onboarding) - PARALLEL
+   * 
+   * @param email - User Email
+   * @param password - User Password
+   * @throws Error wenn Login fehlschlägt
    */
   const login = async (email: string, password: string) => {
-    // MVP: Mock authentication
-    console.log('[RoleContext] Login mock:', { email });
+    console.log('[RoleContext] Login started:', { email });
     
-    // Simulate backend response
-    const mockRole: 'BEWERBER' | 'FIRMA' = 'BEWERBER'; // Explicit non-null type
-    const mockUser = {
-      email,
-      name: 'Mock User',
-      role: mockRole,
-      skills: ['React', 'TypeScript'],
-    };
-    
-    const mockToken = 'mock_token_' + Date.now();
-    
-    // Set state
-    setRoleState(mockUser.role);
-    setUserData(mockUser);
-    setIsAuthenticated(true);
-    setIsOnboardingComplete(true); // Existing user = onboarding done
-    
-    // Persist to AsyncStorage
     try {
-      await Promise.all([
-        AsyncStorage.setItem('authToken', mockToken),
-        AsyncStorage.setItem('userRole', mockUser.role),
-        AsyncStorage.setItem('userData', JSON.stringify(mockUser)),
-        AsyncStorage.setItem('onboardingComplete', 'true'),
-      ]);
-      console.log('[RoleContext] Login successful, persisted to storage');
-    } catch (error) {
-      console.error('[RoleContext] Failed to persist login data:', error);
-    }
-    
-    // SPÄTER:
-    /*
-    try {
-      const response = await authService.login(email, password);
-      setRoleState(response.user.role);
-      saveUserData(response.user);
+      // Business-Logik: AuthService
+      const response = await AuthService.login(email, password);
+      
+      // State-Management: Context
+      setRoleState(response.role);
+      setUserData(response.user);
       setIsAuthenticated(true);
-      setIsOnboardingComplete(response.user.onboardingComplete);
-      await AsyncStorage.setItem('authToken', response.token);
+      setIsOnboardingComplete(response.onboardingComplete);
+      
+      // Storage-Persistence: Parallel für Performance
+      await Promise.all([
+        StorageService.AuthToken.save(response.token),
+        StorageService.UserRole.save(response.role!), // ← response.role ist nie null
+        StorageService.UserData.save(response.user),
+        StorageService.Onboarding.save(response.onboardingComplete),
+      ]);
+      
+      console.log('[RoleContext] Login successful, state + storage synchronized');
     } catch (error) {
-      throw new Error('Login failed: ' + error.message);
+      console.error('[RoleContext] Login failed:', error);
+      throw error; // Re-throw für UI (z.B. Toast-Benachrichtigung)
     }
-    */
   };
 
   /**
    * Register (New User)
    * User must complete onboarding after registration
    * 
-   * MVP: Mock - accepts any credentials, uses pre-selected role + AsyncStorage
-   * PRODUCTION:
-   *   const response = await authService.register({
-   *     email,
-   *     password,
-   *     role // role was set before in RoleSelectionScreen
-   *   });
-   *   setIsAuthenticated(true);
-   *   await AsyncStorage.setItem('token', response.token);
+   * Verwendet AuthService für Business-Logik.
+   * Context übernimmt State-Management + Storage-Persistence.
+   * 
+   * Flow (WICHTIG für UNSER System):
+   * 1. RoleSelectionScreen: User wählt Rolle → setRole(role)
+   * 2. RegisterScreen: User gibt Email/Password ein → register(email, password)
+   * 3. OnboardingDataScreen: User gibt restliche Daten ein → saveUserData()
+   * 
+   * State/Storage Synchronisation:
+   * 1. Validierung: role muss vorher gesetzt sein (in RoleSelectionScreen)
+   * 2. AuthService.register(email, password, role) → AuthResponse
+   * 3. State setzen (role, userData, isAuthenticated, isOnboardingComplete)
+   * 4. Storage speichern (token, role, userData, onboarding) - PARALLEL
+   * 
+   * @param email - User Email
+   * @param password - User Password
+   * @throws Error wenn Registration fehlschlägt oder role nicht gesetzt
    */
   const register = async (email: string, password: string) => {
-    // MVP: Mock registration
-    console.log('[RoleContext] Register mock:', { email, role });
+    console.log('[RoleContext] Register started:', { email, role });
     
-    // role wurde VORHER in RoleSelectionScreen gesetzt!
+    // Validierung: role muss vorher gesetzt sein (in RoleSelectionScreen)
     if (!role) {
-      console.error('[RoleContext] No role selected before registration!');
-      return;
+      throw new Error('[RoleContext] No role selected before registration! User must select role first in RoleSelectionScreen.');
     }
     
-    const mockToken = 'mock_token_' + Date.now();
-    
-    // Update state
-    await saveUserData({ email, password });
-    setIsAuthenticated(true);
-    setIsOnboardingComplete(false); // New user = needs onboarding
-    
-    // Persist to AsyncStorage
     try {
-      await AsyncStorage.setItem('authToken', mockToken);
-      console.log('[RoleContext] Registration successful, persisted to storage');
-    } catch (error) {
-      console.error('[RoleContext] Failed to persist registration:', error);
-    }
-    
-    // SPÄTER:
-    /*
-    try {
-      if (!role) {
-        throw new Error('Role must be selected before registration');
-      }
+      // Business-Logik: AuthService (übergibt role explizit)
+      const response = await AuthService.register(email, password, role);
       
-      const response = await authService.register({
-        email,
-        password,
-        role
-      });
-      
+      // State-Management: Context
+      setRoleState(response.role);
+      setUserData(response.user);
       setIsAuthenticated(true);
-      await AsyncStorage.setItem('authToken', response.token);
+      setIsOnboardingComplete(response.onboardingComplete);
+      
+      // Storage-Persistence: Parallel für Performance
+      await Promise.all([
+        StorageService.AuthToken.save(response.token),
+        StorageService.UserRole.save(response.role!), // ← response.role ist nie null
+        StorageService.UserData.save(response.user),
+        StorageService.Onboarding.save(response.onboardingComplete),
+      ]);
+      
+      console.log('[RoleContext] Registration successful, state + storage synchronized');
     } catch (error) {
-      throw new Error('Registration failed: ' + error.message);
+      console.error('[RoleContext] Registration failed:', error);
+      throw error; // Re-throw für UI (z.B. Toast-Benachrichtigung)
     }
-    */
   };
 
   /**
    * Logout
    * Clears all user data and resets state
    * 
-   * MVP: Resets state + clears AsyncStorage
-   * PRODUCTION:
-   *   await authService.logout();
-   *   await AsyncStorage.multiRemove(['token', 'role', 'userData']);
+   * Verwendet AuthService für Server-Call (später).
+   * Context übernimmt State-Reset + Storage-Clear.
+   * 
+   * State/Storage Synchronisation:
+   * 1. AuthService.logout() → Server-side Token invalidieren (PRODUCTION)
+   * 2. State zurücksetzen (alle States auf Defaults)
+   * 3. Storage löschen (alle Keys)
+   * 
+   * WICHTIG:
+   * - Logout muss IMMER funktionieren (auch bei API-Fehler)
+   * - State/Storage werden IMMER gecleart (auch wenn Server-Call fehlschlägt)
    */
   const logout = async () => {
-    console.log('[RoleContext] Logging out...');
+    console.log('[RoleContext] Logout started');
     
-    // Reset state
-    setRoleState(null);
-    setUserData({});
-    setIsAuthenticated(false);
-    setIsOnboardingComplete(false);
-    
-    // Clear AsyncStorage
     try {
-      await AsyncStorage.multiRemove([
-        'authToken',
-        'userRole',
-        'userData',
-        'onboardingComplete',
-      ]);
-      console.log('[RoleContext] Logout successful, storage cleared');
+      // Business-Logik: AuthService (MVP: macht nichts, PROD: Server-Call)
+      await AuthService.logout();
+      
+      // State-Management: Context (alle States zurücksetzen)
+      setRoleState(null);
+      setUserData({});
+      setIsAuthenticated(false);
+      setIsOnboardingComplete(false);
+      
+      // Storage-Persistence: Alle Daten löschen
+      await StorageService.clearAll();
+      
+      console.log('[RoleContext] Logout successful, state + storage cleared');
     } catch (error) {
-      console.error('[RoleContext] Failed to clear storage on logout:', error);
+      // Logout sollte IMMER funktionieren
+      // → Auch bei Fehler State/Storage clearen
+      console.error('[RoleContext] Logout error (continuing anyway):', error);
+      
+      setRoleState(null);
+      setUserData({});
+      setIsAuthenticated(false);
+      setIsOnboardingComplete(false);
+      
+      await StorageService.clearAll();
+      
+      console.log('[RoleContext] Logout completed (despite error)');
     }
-    
-    // SPÄTER:
-    // await authService.logout();
   };
 
   /**
@@ -404,7 +378,7 @@ export function RoleProvider({ children }: RoleProviderProps) {
     userData,
     isAuthenticated,
     isOnboardingComplete,
-    isHydrated, // ← AsyncStorage geladen?
+    isHydrated, // ← Storage geladen?
     
     // Actions
     setRole,
