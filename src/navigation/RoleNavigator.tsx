@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useRole } from '@/context/RoleContext';
-import { theme } from '@/theme';
 
 import WelcomeScreen from '@/screens/WelcomeScreen';
 import LoginScreen from '@/screens/auth/LoginScreen';
@@ -11,8 +10,16 @@ import RegisterScreen from '@/screens/auth/RegisterScreen';
 import OnboardingDataScreen from '@/screens/auth/OnboardingDataScreen';
 import { BewerberSwipeScreen } from '@/screens/BewerberSwipeScreen';
 import { FirmaSwipeScreen } from '@/screens/FirmaSwipeScreen';
+import { MatchesScreen } from '@/screens/MatchesScreen';
+import { ChatsScreen } from '@/screens/ChatsScreen';
+import { ProfileScreen } from '@/screens/ProfileScreen';
+import { JobsScreen } from '@/screens/JobsScreen';
+import { TabBar } from '@/components/navigation/TabBar';
+import { BEWERBER_TABS, FIRMA_TABS } from '@/config/tabConfig';
 
 const Stack = createStackNavigator();
+const BewerberTab = createBottomTabNavigator();
+const FirmaTab = createBottomTabNavigator();
 
 export default function RoleNavigator() {
   const { isAuthenticated, isOnboardingComplete, role } = useRole();
@@ -23,8 +30,8 @@ export default function RoleNavigator() {
   }
 
   // Authenticated + onboarding complete → Role-based stack
-  if (role === 'BEWERBER') return <BewerberStack />;
-  if (role === 'FIRMA') return <FirmaStack />;
+  if (role === 'BEWERBER') return <BewerberNavigator />;
+  if (role === 'FIRMA') return <FirmaNavigator />;
 
   return <AuthStack />; // Fallback
 }
@@ -53,70 +60,86 @@ function AuthStack() {
   );
 }
 
-// BEWERBER STACK
+// BEWERBER NAVIGATOR (Tab Navigator mit 4 Tabs)
 
-function BewerberStack() {
+function BewerberNavigator() {
   return (
-    <Stack.Navigator
+    <BewerberTab.Navigator
+      tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        gestureEnabled: false, // Swipe-back disabled (used for job cards)
       }}
     >
-      <Stack.Screen name="SwipeJobs" component={BewerberSwipeScreen} />
-    </Stack.Navigator>
+      {BEWERBER_TABS.map((tab) => (
+        <BewerberTab.Screen
+          key={tab.name}
+          name={tab.name}
+          component={getBewerberScreenComponent(tab.name)}
+          options={{
+            tabBarIcon: () => tab.icon,
+            tabBarLabel: tab.label,
+          }}
+        />
+      ))}
+    </BewerberTab.Navigator>
   );
 }
 
-// FIRMA STACK
+// FIRMA NAVIGATOR (Tab Navigator mit 5 Tabs)
 
-function FirmaStack() {
+function FirmaNavigator() {
   return (
-    <Stack.Navigator
+    <FirmaTab.Navigator
+      tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        gestureEnabled: false, // Swipe-back disabled (used for applicant cards)
       }}
     >
-      <Stack.Screen name="SwipeBewerber" component={FirmaSwipeScreen} />
-    </Stack.Navigator>
+      {FIRMA_TABS.map((tab) => (
+        <FirmaTab.Screen
+          key={tab.name}
+          name={tab.name}
+          component={getFirmaScreenComponent(tab.name)}
+          options={{
+            tabBarIcon: () => tab.icon,
+            tabBarLabel: tab.label,
+          }}
+        />
+      ))}
+    </FirmaTab.Navigator>
   );
 }
 
-// STYLES (not needed anymore - keeping for reference if needed later)
+// HELPER: Get Screen Component for Bewerber
+function getBewerberScreenComponent(tabName: string) {
+  switch (tabName) {
+    case 'Swipe':
+      return BewerberSwipeScreen;
+    case 'Matches':
+      return MatchesScreen;
+    case 'Chats':
+      return ChatsScreen;
+    case 'Profile':
+      return ProfileScreen;
+    default:
+      return MatchesScreen; // Fallback
+  }
+}
 
-const styles = StyleSheet.create({
-  placeholder: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: theme.spacing.xl,
-    backgroundColor: theme.colors.background.primary,
-  },
-  placeholderTitle: {
-    ...theme.typography.largeTitle,
-    color: theme.colors.neutral[900],
-    fontWeight: '700',
-    marginBottom: theme.spacing.lg,
-    textAlign: 'center',
-  },
-  placeholderText: {
-    ...theme.typography.body,
-    color: theme.colors.neutral[700],
-    marginBottom: theme.spacing.sm,
-    textAlign: 'center',
-  },
-  placeholderHint: {
-    ...theme.typography.footnote,
-    color: theme.colors.neutral[600],
-    fontStyle: 'italic',
-    marginTop: theme.spacing.xl,
-    textAlign: 'center',
-  },
-  placeholderLink: {
-    ...theme.typography.body,
-    color: theme.colors.primary[500],
-    fontWeight: '600',
-    marginTop: theme.spacing.xxl,
-  },
-});
+// HELPER: Get Screen Component for Firma
+function getFirmaScreenComponent(tabName: string) {
+  switch (tabName) {
+    case 'Swipe':
+      return FirmaSwipeScreen;
+    case 'Matches':
+      return MatchesScreen;
+    case 'Chats':
+      return ChatsScreen;
+    case 'Jobs':
+      return JobsScreen;
+    case 'Profile':
+      return ProfileScreen;
+    default:
+      return MatchesScreen; // Fallback
+  }
+}
