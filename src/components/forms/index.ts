@@ -1,9 +1,10 @@
 /**
  * Forms Module Exports
- * 
- * Zentrale Export-Datei für alle Form-Komponenten.
- * Vereinfacht Imports in anderen Teilen der App.
+ *
+ * Zentrale Sammelstelle für alle Form-bezogenen Komponenten, Hooks und Typen.
+ * Erleichtert Imports und hält Pfade in anderen Modulen kurz und konsistent.
  */
+
 
 // Main Component
 export { default as DynamicForm } from './DynamicForm';

@@ -3,16 +3,13 @@ import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import { theme } from '@/theme';
 import { useTheme } from '@/hooks/useTheme';
 
-/**
- * LoadingIndicator
- * 
- * Fullscreen-Spinner (Kreisförmiger Ladebalken) für Ladezeiten (AsyncStorage, API-Calls, Transitions).
- * Unterstützt Dark Mode und optionale Statusmeldung.
- * Kann einfach importiert und in verschiedenen Screens/Komponenten wiederverwendet werden.
+/*
+ * Zeigt einen kreisförmigen Ladeindikator im Vollbild an.
+ * Farben und Hintergrund basieren auf dem aktiven Theme (via useTheme).
  */
 
 interface LoadingIndicatorProps {
-  message?: string; // Optionaler Text unter dem Spinner
+  message?: string;
 }
 
 export default function LoadingIndicator({ message }: LoadingIndicatorProps) {

@@ -1,10 +1,16 @@
 import type { OnboardingField } from '@/config/onboarding';
 
 /**
- * Shared Types für DynamicForm System
- * 
- * Zentrale Type-Definitionen für alle Form-Komponenten.
+ * Gemeinsame Typdefinitionen für das DynamicForm-System.
+ *
+ * Enthält zentrale Interfaces für:
+ * - Komponenten-Props
+ * - Formularzustand
+ * - Validierungslogik
+ *
+ * Wird von allen Form-Modulen gemeinsam verwendet.
  */
+
 
 // ============================================================================
 // FORM PROPS

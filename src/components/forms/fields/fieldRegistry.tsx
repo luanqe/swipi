@@ -7,11 +7,12 @@ import { theme } from '@/theme';
 
 /**
  * Field Registry
- * 
- * OCP-konform: Mapping von Field-Types zu Komponenten.
- * Neue Field-Types können hinzugefügt werden ohne bestehenden Code zu ändern.
- * 
- * Extrahiert aus DynamicForm.tsx renderField() Switch-Case.
+ *
+ * Zentrale Zuordnung von Field-Types zu ihren jeweiligen Komponenten.
+ * Unterstützt das Open/Closed Principle (OCP): Neue Feldtypen können ergänzt werden, 
+ * ohne bestehenden Code anzupassen.
+ *
+ * Ursprung: aus DynamicForm.tsx (renderField) extrahiert.
  */
 
 // ============================================================================

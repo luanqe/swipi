@@ -2,16 +2,17 @@ import { StyleSheet } from 'react-native';
 import { theme } from '@/theme';
 
 /**
- * Shared Field Styles
- * 
- * Wiederverwendbare Styles für alle Field-Components.
- * DRY: Einmal definiert, überall verwendet.
- * 
- * Vermeidet Code-Duplikation zwischen:
- * - FormInput Component
- * - fieldRegistry Placeholder Component
- * - Zukünftige Field-Types (Select, Checkbox, etc.)
+ * Gemeinsame Field-Styles
+ *
+ * Basis-Styles für alle Form-Felder.
+ * Einmal definiert, überall nutzbar (verhindert doppelte Styles).
+ *
+ * Aktuell genutzt von:
+ * - FormInput
+ * - Placeholder-Feldern im Field-Registry
+ * - später Select, Checkbox usw.
  */
+
 
 export const fieldStyles = StyleSheet.create({
   // Container für jedes Field (spacing zwischen Fields)

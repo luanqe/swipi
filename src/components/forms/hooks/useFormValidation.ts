@@ -3,14 +3,17 @@ import type { OnboardingField } from '@/config/onboarding';
 import type { ValidationState } from '../types';
 
 /**
- * useFormValidation Hook
- * 
- * Verwaltet Validierungs-Logik (SRP: nur Validation).
- * Extrahiert aus DynamicForm.tsx:
- * - errors State
- * - validateForm Funktion (required-Check für Strings und Arrays)
- * - clearError Funktion (neu, für bessere API)
- * - setError Funktion (neu, für manuelle Fehler)
+ * useFormValidation
+ *
+ * Kapselt die gesamte Validierungslogik eines Formulars.
+ * Fokus: nur Validation (Single Responsibility).
+ *
+ * Ursprung: aus DynamicForm.tsx ausgelagert, um UI und Logik zu trennen.
+ *
+ * Funktionen:
+ * - validateForm: prüft Pflichtfelder (Strings & Arrays)
+ * - clearError: entfernt den Fehler eines bestimmten Feldes
+ * - setError: setzt einen manuellen Fehler (z. B. nach Server-Response)
  */
 
 export function useFormValidation(

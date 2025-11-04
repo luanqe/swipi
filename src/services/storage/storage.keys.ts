@@ -2,13 +2,6 @@
  * Storage Keys
  * 
  * Zentrale Verwaltung aller AsyncStorage-Schlüssel.
- * 
- * Vorteile:
- * - Typsicher (autocomplete + compile-time checks)
- * - Keine Magic Strings im Code verstreut
- * - Einfach erweiterbar (z.B. für Migration/Versioning)
- * 
- * Separation of Concerns:
  * Keys ≠ Storage-Logik
  */
 

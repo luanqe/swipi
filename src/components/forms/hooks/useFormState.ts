@@ -2,15 +2,18 @@ import { useState } from 'react';
 import type { FormState } from '../types';
 
 /**
- * useFormState Hook
- * 
- * Verwaltet Form State (SRP: nur State Management).
- * Extrahiert aus DynamicForm.tsx:
- * - formData State
- * - updateField Funktion
- * - resetForm Funktion (neu hinzugefügt für Erweiterbarkeit)
+ * useFormState
+ *
+ * Kümmert sich ausschließlich um das Zustandsmanagement eines Formulars.
+ * Ursprünglich aus DynamicForm.tsx extrahiert, um Logik und UI zu trennen (Single Responsibility).
+ *
+ * Enthält:
+ * - formData: aktueller Formularzustand
+ * - updateField: aktualisiert ein einzelnes Feld
+ * - resetForm: setzt alle Werte auf die Initialwerte zurück
  */
 
+  // Aktueller Formularzustand
 export function useFormState(initialValues: Record<string, any> = {}): FormState {
   const [formData, setFormData] = useState<Record<string, any>>(initialValues);
 

@@ -11,11 +11,6 @@ import { STORAGE_KEYS } from './storage.keys';
  * ✅ Single Responsibility: Nur Storage, keine Business-Logik
  * ✅ Type-Safe: Generics für automatische Type-Inference
  * ✅ Error-Handling: Einheitlich über logError()
- * 
- * Warum besser als vorher?
- * - 8 duplizierte AsyncStorage-Calls → 2 generische Funktionen
- * - 6 duplizierte Try-Catch-Blöcke → 1 Error-Handler
- * - Magic Strings überall → 1 zentrale Key-Datei
  */
 
 // ============================================================================

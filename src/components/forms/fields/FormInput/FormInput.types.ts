@@ -1,9 +1,9 @@
 /**
- * FormInput Types
- * 
- * Props Interface für FormInput Komponente.
- * Extrahiert aus DynamicForm.tsx FormInputProps Interface.
+ * FormInputProps
+ * Definiert die Eingabe-Parameter (Props) für die FormInput-Komponente.
+ * Ursprünglich aus DynamicForm.tsx extrahiert, um wiederverwendbar zu sein.
  */
+
 
 export interface FormInputProps {
   label: string;

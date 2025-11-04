@@ -3,16 +3,8 @@ import { UserRole } from '@/context/RoleContext';
 /**
  * Onboarding Configuration
  * 
- * Config-driven Onboarding Steps für verschiedene User-Rollen
- * 
  * MVP: 2 Steps für BEWERBER, 3 Steps für FIRMA
  * PRODUCTION: Erweitert auf 6+ Steps, dynamisch vom Backend laden
- * 
- * Benefits:
- * - Änderung der Steps = nur Config ändern, kein Screen-Code
- * - A/B Testing möglich (verschiedene Onboarding-Varianten)
- * - Internationalization ready (Texte auslagern)
- * - Backend kann Steps definieren
  */
 
 // ============================================================================
@@ -21,30 +13,28 @@ import { UserRole } from '@/context/RoleContext';
 
 /**
  * Field Types
- * Definiert welche Input-Komponente gerendert wird
  */
 export type FieldType = 
-  | 'text'           // TextInput
-  | 'email'          // TextInput mit email keyboard
-  | 'password'       // TextInput mit secureTextEntry
-  | 'textarea'       // MultiLine TextInput
-  | 'select'         // Dropdown / Picker
-  | 'multiselect'    // Multiple Choice
-  | 'checkbox'       // Boolean
-  | 'radio';         // Single Choice aus mehreren Options
+  | 'text'          
+  | 'email'          
+  | 'password'      
+  | 'textarea'      
+  | 'select'        // Dropdown
+  | 'multiselect'   // Multiple Choice
+  | 'checkbox'       
+  | 'radio';         
 
 /**
  * Field Definition
- * Beschreibt ein einzelnes Input-Feld
  */
 export interface OnboardingField {
-  name: string;              // Key für FormData (z.B. "name", "skills")
-  label: string;             // Anzeige-Text über Input
-  type: FieldType;           // Welche Input-Component
-  placeholder?: string;      // Placeholder-Text
-  required?: boolean;        // Pflichtfeld?
+  name: string;
+  label: string;
+  type: FieldType;
+  placeholder?: string;
+  required?: boolean;
   options?: string[];        // Für select/multiselect/radio
-  validation?: {             // Später für Validierung
+  validation?: {
     minLength?: number;
     maxLength?: number;
     pattern?: RegExp;
@@ -57,8 +47,8 @@ export interface OnboardingField {
  */
 export interface OnboardingStep {
   id: number;                // Eindeutige ID (für Tracking)
-  title: string;             // Überschrift auf Screen
-  subtitle?: string;         // Optionaler Untertitel
+  title: string;            
+  subtitle?: string;        
   fields: OnboardingField[]; // Input-Felder für diesen Step
   buttonText?: string;       // Custom Button-Text (default: "Weiter")
 }
@@ -78,11 +68,8 @@ export const ONBOARDING_STEPS: OnboardingConfig = {
   
   /**
    * BEWERBER Onboarding (Job-Suchende)
-   * MVP: 2 Steps
-   * PRODUCTION: Erweitern auf 6+ Steps
    */
   BEWERBER: [
-    // Step 1: Name
     {
       id: 1,
       title: 'Wie heißt du?',
@@ -171,11 +158,9 @@ export const ONBOARDING_STEPS: OnboardingConfig = {
   
   /**
    * FIRMA Onboarding (Unternehmen)
-   * MVP: 3 Steps
-   * PRODUCTION: Erweitern auf 6+ Steps
    */
   FIRMA: [
-    // Step 1: Firmenname
+    // Step 1
     {
       id: 1,
       title: 'Wie heißt ihr?',
@@ -192,7 +177,7 @@ export const ONBOARDING_STEPS: OnboardingConfig = {
       buttonText: 'Weiter',
     },
     
-    // Step 2: Branche
+    // Step 2
     {
       id: 2,
       title: 'Welche Branche?',
@@ -222,7 +207,7 @@ export const ONBOARDING_STEPS: OnboardingConfig = {
       buttonText: 'Weiter',
     },
     
-    // Step 3: Kurzbeschreibung
+    // Step 3
     {
       id: 3,
       title: 'Kurzbeschreibung',

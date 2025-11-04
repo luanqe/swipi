@@ -5,18 +5,16 @@ import { fieldStyles } from '../sharedStyles';
 import type { FormInputProps } from './FormInput.types';
 
 /**
- * FormInput Component
- * 
- * Wiederverwendbares Input-Feld für Formulare.
- * Extrahiert aus DynamicForm.tsx (SRP: nur Input-Rendering).
- * 
- * Features:
- * - ✅ Nutzt UI Input Component (keine duplizierten Styles!)
- * - Label + Input + Error Message
- * - Dark Mode Support
- * - Multiline Support (Textarea)
- * - Verschiedene Keyboard-Types
- * - Secure Entry (Password)
+ * FormInput
+ *
+ * Universelles Eingabefeld für Formulare.
+ * Ursprünglich aus DynamicForm.tsx ausgelagert, um nur das Input-Rendering zu übernehmen (SRP).
+ *
+ * Eigenschaften:
+ * - nutzt zentrale UI-Input-Komponente → keine Style-Duplikate
+ * - unterstützt Label, Fehlertext und sichere Eingabe (Passwort)
+ * - funktioniert mit verschiedenen Tastaturtypen und Multiline
+ * - Dark-Mode-kompatibel (über Theme-System, Prop bleibt aus Kompatibilitätsgründen)
  */
 
 export function FormInput({
@@ -34,7 +32,7 @@ export function FormInput({
 }: FormInputProps) {
   return (
     <View style={fieldStyles.fieldContainer}>
-      {/* ✅ Wiederverwendbare UI Input Component */}
+      {/*  Wiederverwendbare UI Input Component */}
       <Input
         label={label}
         value={value}

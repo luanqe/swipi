@@ -5,16 +5,8 @@ import { colors, darkColors } from '@/theme';
  * useTheme Hook
  * 
  * Zentralisierte Dark Mode Logic - verhindert Code-Duplikation.
- * Ersetzt repetitiven Code in allen Components/Screens:
- * 
- * ❌ VORHER (20+ mal wiederholt):
- * const colorScheme = useColorScheme();
- * const isDark = colorScheme === 'dark';
- * const activeColors = isDark ? darkColors : colors;
- * 
- * ✅ NACHHER (eine Zeile):
- * const { isDark, activeColors } = useTheme();
- * 
+ * Ersetzt repetitiven Code in allen Components/Screens
+ *
  * @returns {Object} isDark (boolean), activeColors (colors | darkColors)
  */
 export function useTheme() {
@@ -25,6 +17,6 @@ export function useTheme() {
   return { 
     isDark, 
     activeColors,
-    colorScheme, // Falls jemand colorScheme direkt braucht
+    colorScheme,
   };
 }

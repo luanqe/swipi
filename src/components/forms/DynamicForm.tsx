@@ -13,15 +13,18 @@ import type { DynamicFormProps } from './types';
 import type { OnboardingField } from '@/config/onboarding';
 
 /**
- * DynamicForm - SOLID-konform refactored
- * 
- * Orchestriert Formular-Logik, delegiert Verantwortlichkeiten:
- * - State Management → useFormState Hook (SRP)
- * - Validation → useFormValidation Hook (SRP)
- * - Field Rendering → fieldRegistry (OCP)
- * 
- * Wiederverwendbar für Register, Onboarding, Profile-Edit.
- * Erweiterbar ohne Änderungen am Code (neue Field-Types via Registry).
+ * DynamicForm
+ *
+ * Zentrale Formular-Komponente mit klarer Aufgaben­trennung nach SOLID-Prinzipien.
+ *
+ * Verantwortlichkeiten:
+ * - State-Management → useFormState (SRP)
+ * - Validierung → useFormValidation (SRP)
+ * - Field-Rendering → fieldRegistry (OCP)
+ *
+ * Einsatzbereiche:
+ * Registrierung, Onboarding, Profilbearbeitung usw.
+ * Neue Feldtypen können ergänzt werden, ohne bestehenden Code anzupassen.
  */
 
 export default function DynamicForm({
