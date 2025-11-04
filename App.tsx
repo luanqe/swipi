@@ -3,7 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Services
+import { StorageService } from './src/services/storage';
 
 // Context
 import { RoleProvider } from './src/context/RoleContext';
@@ -39,7 +41,7 @@ export default function App() {
         await SplashScreen.hideAsync();
         
         // Check if user is logged in
-        const authToken = await AsyncStorage.getItem('authToken');
+        const authToken = await StorageService.AuthToken.get();
         
         if (authToken) {
           // Returning user → Skip splash, go directly to app

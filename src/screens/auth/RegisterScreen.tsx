@@ -81,7 +81,8 @@ export default function RegisterScreen({ navigation }: any) {
 
       <KeyboardAvoidingView
         style={styles.keyboardView}
-        {...layout.keyboardAware.withKeyboard}
+        behavior={layout.keyboard.behavior}
+        keyboardVerticalOffset={layout.keyboard.offset}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -180,13 +181,29 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: layout.screenPadding.horizontal,
+    paddingHorizontal: spacing.lg,
   },
-  header: layout.verticalDistribution.header,
+  
+  header: {
+    ...layout.screen.header,
+  },
+  
   subtitle: {
     marginTop: spacing.sm,
   },
-  form: layout.verticalDistribution.form,
-  spacer: layout.verticalDistribution.spacer,
-  footer: layout.verticalDistribution.footer,
+  
+  form: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    gap: spacing.sm,
+  },
+  
+  spacer: {
+    flexShrink: 0.2,
+    minHeight: spacing.xl,
+  },
+  
+  footer: {
+    ...layout.screen.actions,
+  },
 });

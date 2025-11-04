@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, Input, Button } from '@/components/ui';
-import { layout, getGradientColors } from '@/theme';
+import { layout, spacing, getGradientColors } from '@/theme';
 import { useRole } from '@/context/RoleContext';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -63,7 +63,8 @@ export default function LoginScreen({ navigation }: any) {
 
       <KeyboardAvoidingView
         style={styles.keyboardView}
-        {...layout.keyboardAware.withKeyboard}
+        behavior={layout.keyboard.behavior}
+        keyboardVerticalOffset={layout.keyboard.offset}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -136,10 +137,25 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: layout.screenPadding.horizontal,
+    paddingHorizontal: spacing.lg,
   },
-  header: layout.verticalDistribution.header,
-  form: layout.verticalDistribution.form,
-  spacer: layout.verticalDistribution.spacer,
-  footer: layout.verticalDistribution.footer,
+  
+  header: {
+    ...layout.screen.header,
+  },
+  
+  form: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    gap: spacing.sm,
+  },
+  
+  spacer: {
+    flexShrink: 0.2,
+    minHeight: spacing.xl,
+  },
+  
+  footer: {
+    ...layout.screen.actions,
+  },
 });

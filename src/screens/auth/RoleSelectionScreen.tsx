@@ -94,15 +94,22 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: layout.screenPadding.horizontal,
+    paddingHorizontal: spacing.lg,
   },
   
-  // ✅ Zentrale Layout-Zonen
-  header: layout.verticalDistribution.header,
-  spacer: layout.verticalDistribution.spacer,
-  footer: layout.verticalDistribution.footer,
+  header: {
+    ...layout.screen.header,
+  },
   
-  // Screen-spezifische Styles
+  spacer: {
+    flexShrink: 0.2,
+    minHeight: spacing.xl,
+  },
+  
+  footer: {
+    ...layout.screen.actions,
+  },
+  
   rolesContainer: {
     flexDirection: 'row',
     gap: spacing.md,

@@ -11,11 +11,11 @@ export { spacing } from './spacing';
 export { borderRadius } from './borderRadius';
 export { shadows } from './shadows';
 export { animations } from './animations';
-export { layout, bottomPadding } from './layout';
+export { layout } from './layout';
 
 import { colors, darkColors } from './colors';
 import { typography } from './typography';
-import { spacing, bottomPadding } from './spacing';
+import { spacing } from './spacing';
 import { borderRadius } from './borderRadius';
 import { shadows } from './shadows';
 import { animations } from './animations';
@@ -25,7 +25,6 @@ export const theme = {
   darkColors,
   typography,
   spacing,
-  bottomPadding,
   borderRadius,
   shadows,
   animations,

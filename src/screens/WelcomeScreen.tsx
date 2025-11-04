@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Text, Logo } from '@/components/ui';
-import { layout, getGradientColors } from '@/theme';
+import { layout, spacing, getGradientColors } from '@/theme';
 import { useTheme } from '@/hooks/useTheme';
 
 /**
@@ -78,15 +78,18 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: layout.screenPadding.horizontal,
+    paddingHorizontal: spacing.lg,
     justifyContent: 'space-between',
   },
   
-  // ✅ Standardisiertes Onboarding Layout
-  topSection: layout.onboardingScreen.topSection,
-  bottomSection: layout.onboardingScreen.bottomSection,
+  topSection: {
+    ...layout.screen.header,
+  },
   
-  // Screen-spezifische Styles
+  bottomSection: {
+    ...layout.screen.actions,
+  },
+  
   slogan: {
     fontStyle: 'italic',
     letterSpacing: 2,
