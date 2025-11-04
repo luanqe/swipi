@@ -26,14 +26,6 @@ npm run android
 - ♿️ **Accessibility** first (VoiceOver, Dynamic Type)
 - 📲 **iOS & Android** native feel
 
-## 🎨 Design System
-
-See `.github/copilot-instructions.md` for comprehensive design guidelines including:
-- Color palette
-- Typography system
-- Spacing & layout
-- Component specifications
-- Animation guidelines
 
 ## 📂 Project Structure
 

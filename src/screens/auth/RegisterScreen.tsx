@@ -26,7 +26,6 @@ export default function RegisterScreen({ navigation }: any) {
   const [username, setUsername] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [companyName, setCompanyName] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -50,7 +49,6 @@ export default function RegisterScreen({ navigation }: any) {
       // TODO: Move to register function or onboarding
       console.log('[RegisterScreen] Additional data:', {
         username,
-        companyName: role === 'FIRMA' ? companyName : undefined,
       });
       
       // Navigate to Onboarding
@@ -67,8 +65,7 @@ export default function RegisterScreen({ navigation }: any) {
   const isFormValid = 
     username.length > 0 && 
     email.length > 0 && 
-    password.length >= 8 &&
-    (role === 'BEWERBER' || companyName.length > 0);
+    password.length >= 8;
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
@@ -135,15 +132,6 @@ export default function RegisterScreen({ navigation }: any) {
                 autoCapitalize="none"
                 autoCorrect={false}
               />
-
-              {role === 'FIRMA' && (
-                <Input
-                  placeholder="Firmenname"
-                  value={companyName}
-                  onChangeText={setCompanyName}
-                  autoCorrect={false}
-                />
-              )}
             </View>
 
             <View style={styles.spacer} />
