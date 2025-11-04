@@ -9,6 +9,8 @@ import LoginScreen from '@/screens/auth/LoginScreen';
 import RoleSelectionScreen from '@/screens/auth/RoleSelectionScreen';
 import RegisterScreen from '@/screens/auth/RegisterScreen';
 import OnboardingDataScreen from '@/screens/auth/OnboardingDataScreen';
+import { BewerberSwipeScreen } from '@/screens/BewerberSwipeScreen';
+import { FirmaSwipeScreen } from '@/screens/FirmaSwipeScreen';
 
 const Stack = createStackNavigator();
 
@@ -61,7 +63,7 @@ function BewerberStack() {
         gestureEnabled: false, // Swipe-back disabled (used for job cards)
       }}
     >
-      <Stack.Screen name="SwipeJobs" component={PlaceholderSwipeJobs} />
+      <Stack.Screen name="SwipeJobs" component={BewerberSwipeScreen} />
     </Stack.Navigator>
   );
 }
@@ -76,42 +78,12 @@ function FirmaStack() {
         gestureEnabled: false, // Swipe-back disabled (used for applicant cards)
       }}
     >
-      <Stack.Screen name="SwipeBewerber" component={PlaceholderSwipeBewerber} />
+      <Stack.Screen name="SwipeBewerber" component={FirmaSwipeScreen} />
     </Stack.Navigator>
   );
 }
 
-// PLACEHOLDER SCREENS (TODO: Replace with real screens)
-
-function PlaceholderSwipeJobs() {
-  const { userData, logout } = useRole();
-  
-  return (
-    <View style={styles.placeholder}>
-      <Text style={styles.placeholderTitle}>🎉 Swipe Jobs Screen</Text>
-      <Text style={styles.placeholderText}>Hallo {userData.name}!</Text>
-      <Text style={styles.placeholderText}>Skills: {userData.skills?.join(', ')}</Text>
-      <Text style={styles.placeholderHint}>[Swipe-Cards kommen hier hin]</Text>
-      <Text style={styles.placeholderLink} onPress={logout}>Logout (Test)</Text>
-    </View>
-  );
-}
-
-function PlaceholderSwipeBewerber() {
-  const { userData, logout } = useRole();
-  
-  return (
-    <View style={styles.placeholder}>
-      <Text style={styles.placeholderTitle}>🏢 Swipe Bewerber Screen</Text>
-      <Text style={styles.placeholderText}>Firma: {userData.companyName}</Text>
-      <Text style={styles.placeholderText}>Branche: {userData.branche}</Text>
-      <Text style={styles.placeholderHint}>[Swipe-Cards kommen hier hin]</Text>
-      <Text style={styles.placeholderLink} onPress={logout}>Logout (Test)</Text>
-    </View>
-  );
-}
-
-// STYLES
+// STYLES (not needed anymore - keeping for reference if needed later)
 
 const styles = StyleSheet.create({
   placeholder: {

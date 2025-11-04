@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import type { OnboardingField } from '@/config/onboarding';
 import { FormInput } from './FormInput';
+import { FormSelect } from './FormSelect';
+import { FormMultiSelect } from './FormMultiSelect';
 import { fieldStyles } from './sharedStyles';
 import { theme } from '@/theme';
 
@@ -79,6 +81,38 @@ function TextareaFieldComponent({ field, value, onChange, error, isDark }: Field
   );
 }
 
+// Select Component (Single Choice)
+function SelectFieldComponent({ field, value, onChange, error, isDark }: FieldComponentProps) {
+  return (
+    <FormSelect
+      label={field.label}
+      value={value || ''}
+      onValueChange={onChange}
+      options={field.options || []}
+      placeholder={field.placeholder}
+      required={field.required}
+      error={error}
+      isDark={isDark}
+    />
+  );
+}
+
+// MultiSelect Component (Multiple Choice)
+function MultiSelectFieldComponent({ field, value, onChange, error, isDark }: FieldComponentProps) {
+  return (
+    <FormMultiSelect
+      label={field.label}
+      value={value || []}
+      onValueChange={onChange}
+      options={field.options || []}
+      placeholder={field.placeholder}
+      required={field.required}
+      error={error}
+      isDark={isDark}
+    />
+  );
+}
+
 // Placeholder Component (für noch nicht implementierte Types)
 function PlaceholderFieldComponent({ field, isDark }: FieldComponentProps) {
   return (
@@ -105,10 +139,10 @@ export const fieldRegistry: Record<FieldType, FieldComponent> = {
   email: TextFieldComponent,
   password: PasswordFieldComponent,
   textarea: TextareaFieldComponent,
+  select: SelectFieldComponent,
+  multiselect: MultiSelectFieldComponent,
   
   // Placeholder für zukünftige Types
-  select: PlaceholderFieldComponent,
-  multiselect: PlaceholderFieldComponent,
   checkbox: PlaceholderFieldComponent,
   radio: PlaceholderFieldComponent,
 };

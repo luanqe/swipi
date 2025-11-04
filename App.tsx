@@ -78,21 +78,21 @@ export default function App() {
     return <LoadingIndicator />;
   }
 
-  // Show custom splash for new users
-  if (showSplash) {
-    return <SplashScreenComponent onFinish={handleSplashFinish} />;
-  }
+  // // Show custom splash for new users
+  // if (showSplash) {
+  //   return <SplashScreenComponent onFinish={handleSplashFinish} />;
+  // }
 
   // Main app for returning users (or after splash)
   return (
+    <SafeAreaProvider>
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
         <RoleProvider>
           <NavigationContainer>
             <RoleNavigator />
           </NavigationContainer>
         </RoleProvider>
-      </SafeAreaProvider>
     </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }
