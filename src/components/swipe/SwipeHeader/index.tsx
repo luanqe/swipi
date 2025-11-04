@@ -6,12 +6,18 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Logo } from '../../ui/Logo';
-import { Text } from '../../ui';
 import { colors, spacing } from '../../../theme';
+import { Button } from '@/components/ui/Button';
+import { AuthService } from '@/services/auth/AuthService';
 
 interface SwipeHeaderProps {
   onMenuPress: () => void;
 }
+
+  const handleLogout = () => {
+    AuthService.logout();
+    window.location.reload();
+  }
 
 export const SwipeHeader: React.FC<SwipeHeaderProps> = ({ onMenuPress }) => {
   return (
@@ -21,18 +27,15 @@ export const SwipeHeader: React.FC<SwipeHeaderProps> = ({ onMenuPress }) => {
         <Logo size="small" />
       </View>
 
-      {/* Burger Menu (rechts) */}
-      <TouchableOpacity 
-        style={styles.menuButton}
-        onPress={onMenuPress}
-        activeOpacity={0.7}
-      >
-        <View style={styles.burgerLine} />
-        <View style={styles.burgerLine} />
-        <View style={styles.burgerLine} />
-      </TouchableOpacity>
+<Button
+  style={styles.menuButton}
+  size='sm'
+  onPress={() => handleLogout()}>
+  Logout
+</Button>
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -50,10 +53,11 @@ const styles = StyleSheet.create({
     // Logo ist bereits zentriert
   },
   menuButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
+    height: 30,
+    width: 80,
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary[500],
   },
   burgerLine: {
     width: 24,

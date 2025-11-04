@@ -1,6 +1,7 @@
 import { UserRole } from '@/context/RoleContext';
 import { AuthResponse } from './auth.types';
 import { createMockUser, generateMockToken, simulateNetworkDelay } from './auth.mocks';
+import { STORAGE_KEYS } from '../storage';
 
 /**
  * Auth Service
@@ -83,7 +84,11 @@ export async function register(
 export async function logout(token?: string): Promise<void> {
   // MVP: Local only (Context handles State + Storage clear)
   // PRODUCTION: Siehe AuthService.prod.ts für Token-Invalidierung
-  console.log('[AuthService] Logout successful');
+  const authToken = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+  if (authToken) {
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+     console.log('[AuthService] Logout successful');
+  }
 }
 
 // ============================================================================

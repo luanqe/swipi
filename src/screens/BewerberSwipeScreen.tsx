@@ -4,15 +4,16 @@
  * Nutzt SwipeService für Daten, Components für UI
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Children } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { Text } from '../components/ui';
+import { Button, Text } from '../components/ui';
 import { SwipeHeader } from '../components/swipe/SwipeHeader';
 import { JobCardContent } from '../components/swipe/SwipeCard/JobCardContent';
 import { SwipeActions } from '../components/swipe/SwipeActions';
 import LoadingIndicator from '../components/common/LoadingIndicator';
 import { swipeService, JobCard } from '../services/swipe';
 import { colors, spacing } from '../theme';
+import { AuthService } from '@/services/auth';
 
 export const BewerberSwipeScreen: React.FC = () => {
   const [jobCards, setJobCards] = useState<JobCard[]>([]);
@@ -112,8 +113,10 @@ export const BewerberSwipeScreen: React.FC = () => {
   // Render current card
   const currentCard = jobCards[currentIndex];
 
+
   return (
     <View style={styles.container}>
+
       {/* Header */}
       <SwipeHeader onMenuPress={handleMenuPress} />
 
